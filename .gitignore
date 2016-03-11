@@ -1,3 +1,4 @@
-multi/sites/*/themes/*/.sass-cache/*
-/multi/sites/*/themes/*/.sass-cache/*
-/multi/sites/*/themes/*/.sass-cache
+/sites/*/themes/*/.sass-cache/*
+sites/*/themes/*/.sass-cache/*
+/sites/*/themes/*/.sass-cache
+sites/*/themes/*/.sass-cache
