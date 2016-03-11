@@ -1,0 +1,39 @@
+/**
+ * @file
+ * Wireframes Styling
+ *
+ * Add wireframes to the basic layout elements.
+ */
+@font-face {
+  font-family: 'georgia', sans-serif;
+  src: url("../fonts/georgia.eot?") format("eot"), url("../fonts/georgia.otf") format("opentype"), url("../fonts/georgia.woff") format("woff"), url("../fonts/georgia.ttf") format("truetype"), url("../fonts/georgia.svg#Helvetica") format("svg");
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'georgia', sans-serif;
+  src: url("../fonts/georgiab.eot?") format("eot"), url("../fonts/georgiab.otf") format("opentype"), url("../fonts/georgiab.woff") format("woff"), url("../fonts/georgiab.ttf") format("truetype"), url("../fonts/georgiab.svg#Helvetica") format("svg");
+  font-weight: 800;
+}
+@font-face {
+  font-family: 'georgia', sans-serif;
+  src: url("../fonts/georgiai.eot?") format("eot"), url("../fonts/georgiai.otf") format("opentype"), url("../fonts/georgiai.woff") format("woff"), url("../fonts/georgiai.ttf") format("truetype"), url("../fonts/georgiai.svg#Helvetica") format("svg");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'georgia', sans-serif;
+  src: url("../fonts/georgiaz.eot?") format("eot"), url("../fonts/georgiaz.otf") format("opentype"), url("../fonts/georgiaz.woff") format("woff"), url("../fonts/georgiaz.ttf") format("truetype"), url("../fontsgeorgiaz.svg#Helvetica") format("svg");
+  font-weight: 800;
+  font-style: italic;
+}
+/* line 12, ../sass/wireframes.scss */
+.with-wireframes #header,
+.with-wireframes #main,
+.with-wireframes #content,
+.with-wireframes #navigation,
+.with-wireframes .region-sidebar-first,
+.with-wireframes .region-sidebar-second,
+.with-wireframes #footer,
+.with-wireframes .region-bottom {
+  outline: 1px solid #ccc;
+}

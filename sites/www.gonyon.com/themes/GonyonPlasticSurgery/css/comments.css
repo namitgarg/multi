@@ -1,0 +1,141 @@
+/**
+ * @file
+ * Comment Styling
+ */
+@font-face {
+  font-family: 'georgia', sans-serif;
+  src: url("../fonts/georgia.eot?") format("eot"), url("../fonts/georgia.otf") format("opentype"), url("../fonts/georgia.woff") format("woff"), url("../fonts/georgia.ttf") format("truetype"), url("../fonts/georgia.svg#Helvetica") format("svg");
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'georgia', sans-serif;
+  src: url("../fonts/georgiab.eot?") format("eot"), url("../fonts/georgiab.otf") format("opentype"), url("../fonts/georgiab.woff") format("woff"), url("../fonts/georgiab.ttf") format("truetype"), url("../fonts/georgiab.svg#Helvetica") format("svg");
+  font-weight: 800;
+}
+@font-face {
+  font-family: 'georgia', sans-serif;
+  src: url("../fonts/georgiai.eot?") format("eot"), url("../fonts/georgiai.otf") format("opentype"), url("../fonts/georgiai.woff") format("woff"), url("../fonts/georgiai.ttf") format("truetype"), url("../fonts/georgiai.svg#Helvetica") format("svg");
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'georgia', sans-serif;
+  src: url("../fonts/georgiaz.eot?") format("eot"), url("../fonts/georgiaz.otf") format("opentype"), url("../fonts/georgiaz.woff") format("woff"), url("../fonts/georgiaz.ttf") format("truetype"), url("../fontsgeorgiaz.svg#Helvetica") format("svg");
+  font-weight: 800;
+  font-style: italic;
+}
+/* line 9, ../sass/comments.scss */
+.comments {
+  /* Wrapper for the list of comments and its title */
+  margin: 1.5em 0;
+}
+/* line 12, ../sass/comments.scss */
+.comments h2.title {
+  /* Heading for the list of comments */
+}
+/* line 15, ../sass/comments.scss */
+.comments h2.comment-form {
+  /* Heading for the comment form */
+}
+
+/* line 19, ../sass/comments.scss */
+.comment {
+  /* Wrapper for a single comment */
+}
+/* line 21, ../sass/comments.scss */
+.comment.comment-preview {
+  /* Preview of the comment before submitting new or updated comment */
+  background-color: #ffffea;
+  /* Drupal core will use a #ffffea background. See #1110842 */
+}
+/* line 25, ../sass/comments.scss */
+.comment.new {
+  /* A new comment since the user last viewed the page. */
+}
+/* line 28, ../sass/comments.scss */
+.comment.first {
+  /* The first comment in the list of comments */
+}
+/* line 31, ../sass/comments.scss */
+.comment.last {
+  /* The last comment in the list of comments */
+}
+/* line 34, ../sass/comments.scss */
+.comment.odd {
+  /* An odd-numbered comment in the list of comments */
+}
+/* line 37, ../sass/comments.scss */
+.comment.even {
+  /* An even-numbered comment in the list of comments */
+}
+/* line 40, ../sass/comments.scss */
+.comment.comment-by-anonymous {
+  /* A comment created by an anonymous user */
+}
+/* line 43, ../sass/comments.scss */
+.comment.comment-by-node-author {
+  /* A comment created by the node's author */
+}
+/* line 46, ../sass/comments.scss */
+.comment.comment-by-viewer {
+  /* A comment created by the current user */
+}
+/* line 49, ../sass/comments.scss */
+.comment h3.comment-title {
+  /* Comment title */
+}
+/* line 52, ../sass/comments.scss */
+.comment .new {
+  /* "New" marker for comments that are new for the current user */
+  color: #c00;
+}
+/* line 56, ../sass/comments.scss */
+.comment .user-picture {
+  /* The picture of the comment author */
+}
+/* line 59, ../sass/comments.scss */
+.comment .submitted {
+  /* The "posted by" information */
+}
+/* line 62, ../sass/comments.scss */
+.comment .permalink {
+  /* Comment's permalink wrapper */
+  text-transform: uppercase;
+  font-size: 75%;
+}
+/* line 67, ../sass/comments.scss */
+.comment .user-signature {
+  /* The user's signature */
+}
+/* line 70, ../sass/comments.scss */
+.comment ul.links {
+  /* Comment links. See also the ul.links declaration in the pages.css. */
+}
+
+/* line 74, ../sass/comments.scss */
+.indented {
+  /* Nested comments are indented */
+  margin-left: 30px;
+  /* Drupal core uses a 25px left margin */
+}
+
+/* line 78, ../sass/comments.scss */
+.comment-unpublished {
+  /* Unpublished comments */
+  /* background-color: #fff4f4; */
+  /* Drupal core uses a #fff4f4 background */
+}
+/* line 81, ../sass/comments.scss */
+.comment-unpublished p.unpublished {
+  /* The word "Unpublished" displayed underneath the content. */
+  height: 0;
+  overflow: visible;
+  color: #d8d8d8;
+  font-size: 75px;
+  line-height: 1;
+  font-family: Impact, "Arial Narrow", Helvetica, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  word-wrap: break-word;
+}

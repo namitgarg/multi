@@ -1,0 +1,355 @@
+/**
+ * @file
+ * Page Styling
+ *
+ * Style the markup found in page.tpl.php. Also includes some styling of
+ * miscellaneous Drupal elements that appear in the $content variable, such as
+ * ul.links, .pager, .more-link, etc.
+ */
+
+@import "base";
+
+
+/*
+ * Body
+ */
+
+/*========================= Global css ===============================*/
+*{
+    box-sizing: border-box;
+}
+body {
+    padding: 0;
+    margin: 0;
+    background: #FFF;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 400;
+    font-size:14px;
+    @include Raleway;
+}
+a,img{
+    outline: none !important;
+}
+#skip-link{
+    margin:0;
+}
+#page{
+    width:100%;
+}
+#_atssh{
+    display:none;
+}
+a{
+    color:#53738e;
+    &:hover{
+        text-decoration: none;
+    }
+}
+#at15s{
+    .atm-f{
+        height:auto !important;
+    }
+}
+/*============================ main wrapper css ===================================*/
+#header-top,#header,#mast-cycle,#top-cta-wrap,#form-home-wrap,#main-wrapper,#gonyon-wrap,#gallery-blog-wrap,.reviews-wrap,#logo-slider,#footer-wrap,#bottom-wrap,#bottm_menu{
+    @include inline-block;
+    width:100%;
+}
+/*============================ max-width 1170 wrapper css ===================================*/
+.region-header,.header-inner,.region-top-cta,.region-form-home,#main,.region-gonyon,.region-gallery-blog,.region-reviews,.region-logo-slider,.region-footer,.region-bottom,.region-bottom-menu{
+    max-width: 1100px;
+    margin:0 auto;
+    padding: 0 18px;
+}
+.region-header{
+    padding:0;
+    position: relative;
+}
+/*============================ header-top css ===================================*/
+#header-top{
+    background: #455360;
+    padding:7px 0 8px;
+}
+/*============================ header-top css ===================================*/
+#header{
+    background: #fff;
+    box-shadow: 0px 3px 3px 0px rgba(92, 81, 71, 0.3);
+    -moz-box-shadow: 0px 3px 3px 0px rgba(92, 81, 71, 0.3);
+    -webkit-box-shadow: 0px 3px 3px 0px rgba(92, 81, 71, 0.3);
+    z-index: 8;
+    text-align: center;
+    position: relative;
+}
+/*============================ header-top css ===================================*/
+#navigation{
+    display: none;
+}
+/*============================ top-cta-wrap css ===================================*/
+#top-cta-wrap{
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#8b7140+0,917641+3,9b7f4d+8,a08550+10,a78b5b+13,b7a06e+20,c3a879+24,ceb688+30,d7bf91+36,d7bf91+46,d1b98b+59,b59969+94,af9562+99,b09462+100,b39968+100 */
+    background: #8b7140; /* Old browsers */
+    background: -moz-linear-gradient(top,  #8b7140 0%, #917641 3%, #9b7f4d 8%, #a08550 10%, #a78b5b 13%, #b7a06e 20%, #c3a879 24%, #ceb688 30%, #d7bf91 36%, #d7bf91 46%, #d1b98b 59%, #b59969 94%, #af9562 99%, #b09462 100%, #b39968 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8b7140), color-stop(3%,#917641), color-stop(8%,#9b7f4d), color-stop(10%,#a08550), color-stop(13%,#a78b5b), color-stop(20%,#b7a06e), color-stop(24%,#c3a879), color-stop(30%,#ceb688), color-stop(36%,#d7bf91), color-stop(46%,#d7bf91), color-stop(59%,#d1b98b), color-stop(94%,#b59969), color-stop(99%,#af9562), color-stop(100%,#b09462), color-stop(100%,#b39968)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #8b7140 0%,#917641 3%,#9b7f4d 8%,#a08550 10%,#a78b5b 13%,#b7a06e 20%,#c3a879 24%,#ceb688 30%,#d7bf91 36%,#d7bf91 46%,#d1b98b 59%,#b59969 94%,#af9562 99%,#b09462 100%,#b39968 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #8b7140 0%,#917641 3%,#9b7f4d 8%,#a08550 10%,#a78b5b 13%,#b7a06e 20%,#c3a879 24%,#ceb688 30%,#d7bf91 36%,#d7bf91 46%,#d1b98b 59%,#b59969 94%,#af9562 99%,#b09462 100%,#b39968 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #8b7140 0%,#917641 3%,#9b7f4d 8%,#a08550 10%,#a78b5b 13%,#b7a06e 20%,#c3a879 24%,#ceb688 30%,#d7bf91 36%,#d7bf91 46%,#d1b98b 59%,#b59969 94%,#af9562 99%,#b09462 100%,#b39968 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #8b7140 0%,#917641 3%,#9b7f4d 8%,#a08550 10%,#a78b5b 13%,#b7a06e 20%,#c3a879 24%,#ceb688 30%,#d7bf91 36%,#d7bf91 46%,#d1b98b 59%,#b59969 94%,#af9562 99%,#b09462 100%,#b39968 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8b7140', endColorstr='#b39968',GradientType=0 ); /* IE6-9 */    
+}
+/*============================ form-home-wrap css ===================================*/
+#form-home-wrap{
+    background: #445360 url(../images/form-bg-latest.jpg) repeat-y center top;
+}
+/*============================ main-wrapper css ===================================*/
+#main-wrapper{
+    background: #edf0f1 url(../images/main-bg-latest1.jpg) repeat-y center top;   
+    position: relative;
+    padding-top:50px;
+}
+/*============================ gonyon-wrap css ===================================*/
+#gonyon-wrap{
+    background: #937843; /* Old browsers */
+    background: -moz-linear-gradient(top,  #937843 0%, #937843 4%, #997e49 7%, #a28654 11%, #bfa574 21%, #cab284 25%, #cdb283 26%, #ccb685 27%, #cfb485 27%, #ceb688 27%, #d2ba8c 29%, #d7bf91 33%, #d7bf91 41%, #d1b98b 53%, #d0b888 53%, #cdb283 59%, #c7af7f 63%, #c9ae7f 64%, #c3a879 69%, #c1aa78 69%, #c1a677 70%, #bda674 73%, #b59b68 82%, #b59b6a 83%, #b19563 89%, #ae9461 90%, #a98d5b 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#937843), color-stop(4%,#937843), color-stop(7%,#997e49), color-stop(11%,#a28654), color-stop(21%,#bfa574), color-stop(25%,#cab284), color-stop(26%,#cdb283), color-stop(27%,#ccb685), color-stop(27%,#cfb485), color-stop(27%,#ceb688), color-stop(29%,#d2ba8c), color-stop(33%,#d7bf91), color-stop(41%,#d7bf91), color-stop(53%,#d1b98b), color-stop(53%,#d0b888), color-stop(59%,#cdb283), color-stop(63%,#c7af7f), color-stop(64%,#c9ae7f), color-stop(69%,#c3a879), color-stop(69%,#c1aa78), color-stop(70%,#c1a677), color-stop(73%,#bda674), color-stop(82%,#b59b68), color-stop(83%,#b59b6a), color-stop(89%,#b19563), color-stop(90%,#ae9461), color-stop(100%,#a98d5b)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #937843 0%,#937843 4%,#997e49 7%,#a28654 11%,#bfa574 21%,#cab284 25%,#cdb283 26%,#ccb685 27%,#cfb485 27%,#ceb688 27%,#d2ba8c 29%,#d7bf91 33%,#d7bf91 41%,#d1b98b 53%,#d0b888 53%,#cdb283 59%,#c7af7f 63%,#c9ae7f 64%,#c3a879 69%,#c1aa78 69%,#c1a677 70%,#bda674 73%,#b59b68 82%,#b59b6a 83%,#b19563 89%,#ae9461 90%,#a98d5b 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #937843 0%,#937843 4%,#997e49 7%,#a28654 11%,#bfa574 21%,#cab284 25%,#cdb283 26%,#ccb685 27%,#cfb485 27%,#ceb688 27%,#d2ba8c 29%,#d7bf91 33%,#d7bf91 41%,#d1b98b 53%,#d0b888 53%,#cdb283 59%,#c7af7f 63%,#c9ae7f 64%,#c3a879 69%,#c1aa78 69%,#c1a677 70%,#bda674 73%,#b59b68 82%,#b59b6a 83%,#b19563 89%,#ae9461 90%,#a98d5b 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #937843 0%,#937843 4%,#997e49 7%,#a28654 11%,#bfa574 21%,#cab284 25%,#cdb283 26%,#ccb685 27%,#cfb485 27%,#ceb688 27%,#d2ba8c 29%,#d7bf91 33%,#d7bf91 41%,#d1b98b 53%,#d0b888 53%,#cdb283 59%,#c7af7f 63%,#c9ae7f 64%,#c3a879 69%,#c1aa78 69%,#c1a677 70%,#bda674 73%,#b59b68 82%,#b59b6a 83%,#b19563 89%,#ae9461 90%,#a98d5b 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #937843 0%,#937843 4%,#997e49 7%,#a28654 11%,#bfa574 21%,#cab284 25%,#cdb283 26%,#ccb685 27%,#cfb485 27%,#ceb688 27%,#d2ba8c 29%,#d7bf91 33%,#d7bf91 41%,#d1b98b 53%,#d0b888 53%,#cdb283 59%,#c7af7f 63%,#c9ae7f 64%,#c3a879 69%,#c1aa78 69%,#c1a677 70%,#bda674 73%,#b59b68 82%,#b59b6a 83%,#b19563 89%,#ae9461 90%,#a98d5b 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#937843', endColorstr='#a98d5b',GradientType=0 ); /* IE6-9 */    
+}
+/*============================ gallery-blog-wrap css ===================================*/
+#gallery-blog-wrap{
+    background: #edf0f1 url(../images/before-after-bg.jpg) repeat-y center top;    
+}
+/*============================ reviews-wrap css ===================================*/
+.reviews-wrap{
+    background: #445360 url(../images/reviews-bg.jpg) repeat-y center top;    
+}
+/*============================ logo-slider css ===================================*/
+#logo-slider{
+    background: #edf0f1 url(../images/logo-slider-bg.jpg) repeat-y center top;    
+}
+.not-front{ 
+    #logo-slider{
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#243551+0,214261+34,234261+46,21435f+46,234060+58,21405d+60,233a59+83,223a56+84,233752+100 */
+        background: #243551; /* Old browsers */
+        background: -moz-linear-gradient(top,  #243551 0%, #214261 34%, #234261 46%, #21435f 46%, #234060 58%, #21405d 60%, #233a59 83%, #223a56 84%, #233752 100%); /* FF3.6+ */
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#243551), color-stop(34%,#214261), color-stop(46%,#234261), color-stop(46%,#21435f), color-stop(58%,#234060), color-stop(60%,#21405d), color-stop(83%,#233a59), color-stop(84%,#223a56), color-stop(100%,#233752)); /* Chrome,Safari4+ */
+        background: -webkit-linear-gradient(top,  #243551 0%,#214261 34%,#234261 46%,#21435f 46%,#234060 58%,#21405d 60%,#233a59 83%,#223a56 84%,#233752 100%); /* Chrome10+,Safari5.1+ */
+        background: -o-linear-gradient(top,  #243551 0%,#214261 34%,#234261 46%,#21435f 46%,#234060 58%,#21405d 60%,#233a59 83%,#223a56 84%,#233752 100%); /* Opera 11.10+ */
+        background: -ms-linear-gradient(top,  #243551 0%,#214261 34%,#234261 46%,#21435f 46%,#234060 58%,#21405d 60%,#233a59 83%,#223a56 84%,#233752 100%); /* IE10+ */
+        background: linear-gradient(to bottom,  #243551 0%,#214261 34%,#234261 46%,#21435f 46%,#234060 58%,#21405d 60%,#233a59 83%,#223a56 84%,#233752 100%); /* W3C */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#243551', endColorstr='#233752',GradientType=0 ); /* IE6-9 */
+    }
+}
+/*============================ footer-wrap css ===================================*/
+#footer-wrap{
+    background: #2e3a41 url(../images/address-bg-latest.jpg) repeat-y center top;    
+    position: relative;
+}
+/*============================ bottom-wrap css ===================================*/
+#bottom-wrap{
+    background: #445360;    
+}
+/*============================ bottm_menu css ===================================*/
+#bottm_menu{
+    background: #2e3a41 url(../images/footer-menu-bg.jpg) no-repeat center top;    
+}
+/*============================ logo css ===================================*/
+#logo{
+    @include inline-block;
+    padding:12px 0;
+    max-width: 100%;
+    line-height: 0;
+}
+#content{
+    width:100%;
+    max-width:100%;
+    float:left;
+    margin-bottom: 20px;
+    h1#page-title{
+        font-size: 22px;
+        line-height: 30px;
+        color:#53738e;
+        font-weight: 400;
+        @include georgia;
+        margin:0;
+        text-align:center;
+        &:first-letter{
+            text-transform: uppercase;
+        }           
+    }
+    h2,h3,h4{
+        font-size: 18px;
+        line-height: normal;
+        color:#53738e;
+        font-weight: 400;
+        margin:0 0 4px;
+    }  
+    h1#page-title+h2{
+        color: #565656;
+        display: block;
+        font-size: 13px !important;
+        font-weight: 400;
+        line-height: 22px;
+        width: 100%;
+        text-align:center;
+        &:first-letter{
+            text-transform: uppercase;
+        }        
+    }     
+    p{
+        font-size: 14px;
+        color:#565656;
+        line-height: 24px;
+        margin:0 0 25px;
+    } 
+    div{
+        font-size: 14px;
+        color:#565656;
+        line-height: 24px;
+        &#content-text{
+            margin-bottom:25px;
+        }
+    }     
+    strong{
+        font-size: 14px;
+        color:#565656;
+        line-height: 30px;   
+    }
+    ul{
+        padding:0 0 0 40px;
+        margin: 0 0 30px;
+        li{
+            font-size: 14px;
+            color:#565656;
+            line-height: 24px;  
+            list-style: square;
+        }
+        &.inline{
+            padding:0;
+            margin:0 0 5px;
+            li{
+                padding:0;
+                list-style: none;
+                background: none;
+            }
+        }
+        &.contextual-links{
+            display: none;
+            padding: 0;
+            li{
+                padding:0;
+                background: none;
+            }
+        }
+    }
+    ol{
+        padding:0 0 0 40px;
+        margin: 0 0 30px;
+        li{
+            font-size: 15px;
+            color:#565656;
+            line-height: 30px; 
+            padding-left:10px;
+        }        
+    }
+    a{
+        color:#53738e;
+        font-size:14px;
+        &:hover{
+            text-decoration:none;
+        }
+    }
+    img{
+        max-width: 100%;
+        margin:10px auto;
+        float:none;
+        display: block;
+    }
+    iframe{
+        max-width: 100%;
+    }
+    #contact{
+        .contact-header{
+            font-size: 18px;
+            line-height: normal;
+            color:#53738e;
+            font-weight: 400;
+            margin:0 0 10px;     
+            display: block;
+        }
+        iframe{
+            height:420px;
+        }
+    }
+}
+/*============================ region-sidebar-second css ===================================*/
+.region-sidebar-second{
+    width:100%;
+    @include inline-block;
+    text-align: center;
+}
+@media all and (min-width:767px){
+    #content{
+        h2,h3,h4{
+            font-size:20px;
+        }
+        h1#page-title{
+            font-size: 32px; 
+            line-height: normal;
+            margin-bottom: 5px;
+        }
+        img.alignleft{
+            float:left;
+            margin: 5px 20px 20px 0 !important;
+        }
+        img.alignright{
+            float:left;
+            margin: 5px 0 20px 20px !important;
+        } 
+        img.aligncenter{
+            display: block;
+            margin: 10px auto !important;
+            float:none !important;
+        }
+        img.blockImg{
+            display: block;
+            width:auto;
+            margin:5px 0;
+        }        
+    }    
+}
+
+@media all and (min-width:1100px){
+    .region-header,.header-inner,.region-top-cta,.region-form-home,#main,.region-gonyon,.region-gallery-blog,.region-reviews,.region-logo-slider,.region-footer,.region-bottom,.region-bottom-menu{
+        padding: 0;
+    }   
+    #logo{
+        float:left;
+    }
+    #navigation{
+        display: block;
+        float:right;
+        background: none;
+        height: auto;
+    }
+    .region-sidebar-second{
+        float:right;
+        max-width: 288px;
+    }
+    .not-front{
+        .region-sidebar-second{
+            float:right;
+            max-width: 302px;
+        }        
+    }
+    #content{
+        max-width: 760px;
+        float:left;
+    }
+    #footer-wrap{
+        background-position: center -70px;
+    }
+    
+}
