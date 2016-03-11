@@ -1,0 +1,4 @@
+name = Metatag Replace
+description = Search and Replace Meta Tags for Node Pages.
+core = 7.x
+dependencies[] = metatag

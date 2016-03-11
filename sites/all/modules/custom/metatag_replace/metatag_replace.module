@@ -1,0 +1,62 @@
+<?php
+/**
+ * @file
+ * Main file for the Metatag Replace module.
+ */
+
+/**
+ * Provides Search and Replace permisssions to different Roles.
+ */
+function metatag_replace_permission() {
+  return array(
+    'metatag_replace' => array(
+      'title' => t('Metatag Replace'),
+      'description' => t('Allow people to search with Metatag Replace'),
+    ),
+    'metatag_replace_confirm' => array(
+      'title' => t('Metatag Replace Confirm'),
+      'description' => t('Allow people to Replace with Metatag replace'),
+    ),
+  );
+}
+
+/**
+ * Implements metatag_menu() for the module.
+ */
+function metatag_replace_menu() {
+  $items['admin/config/search/metatags/replace'] = array(
+    'title callback' => 'Change Metatags',
+    'title' => 'MetaTag Replace',
+    'description' => 'Replace the MetaTags',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('metatag_replace_form'),
+    'access arguments' => array('metatag_replace'),
+    'file' => 'metatag_replace_admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  $items['admin/config/search/metatags/replace/confirm'] = array(
+    'title' => 'Confirm Replace',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('metatag_replace_confirm_form'),
+    'access arguments' => array('metatag_replace_confirm'),
+    'access callback' => TRUE,
+    'file' => 'metatag_replace_admin.inc',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function metatag_replace_theme() {
+  return array(
+    'metatag_replace' => array(
+      'variables' => array(
+        'list' => array(),
+      ),
+      'template' => 'metatag_replace',
+    ),
+  );
+}
