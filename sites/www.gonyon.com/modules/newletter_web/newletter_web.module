@@ -1,0 +1,14 @@
+<?php
+
+function newletter_web_menu() {
+
+  $items['admin/config/search/metatags/replace'] = array(
+    'title' => 'Newsletter Modify',
+    'description' => 'Modify the content of the Webform for News letter',
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('access_content'),
+    'file' => 'newletter_web.inc',
+     'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}

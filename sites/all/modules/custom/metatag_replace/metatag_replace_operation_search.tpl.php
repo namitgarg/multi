@@ -41,7 +41,7 @@ if ($meta_field != 'all') {
       ),
     );
   }
-  print theme_item_list(array(
+  print theme('item_list', array(
     'items' => $items,
     'title' => $title,
     'type' => $type,
@@ -80,7 +80,7 @@ else {
       'children' => $children,
     );
   }
-  print theme_item_list(array(
+  print theme('item_list', array(
     'items' => $items,
     'title' => $title,
     'type' => $type,

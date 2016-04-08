@@ -41,8 +41,7 @@ if ($meta_field != 'all') {
       ),
     );
   }
-    print theme('item_list',
-  array(
+  print theme('item_list', array(
     'items' => $items,
     'title' => $title,
     'type' => $type,
@@ -81,13 +80,12 @@ else {
       'children' => $children,
     );
   }
-  print theme('item_list',
-  array(
-    'items' => $items,
-    'title' => $title,
-    'type' => $type,
-    'attributes' => $attributes,
-  )
+   print theme('item_list', array(
+     'items' => $items,
+     'title' => $title,
+     'type' => $type,
+     'attributes' => $attributes,
+   )
       );
 }
 }
