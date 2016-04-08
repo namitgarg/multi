@@ -12,3 +12,12 @@ function newletter_web_menu() {
   );
   return $items;
 }
+
+function newletter_web_form_alter(&$form, &$form_state, $form_id)
+{
+  print("<pre>");
+  print("kellton");
+  print_r($form_id);
+  die;
+  
+}
