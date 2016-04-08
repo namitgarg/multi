@@ -1,0 +1,19 @@
+To: namit.garg92@gmail.com
+Subject: New release(s) available for www.rai.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8Bit
+X-Mailer: Drupal
+Sender: namit.garg92@gmail.com
+From: namit.garg92@gmail.com
+
+There is a security update available for your version of Drupal. To ensure
+the security of your server, you should update immediately!
+
+See the available updates page for more information:
+http://www.rai.com/admin/reports/updates
+
+Your site is currently configured to send these emails when any updates are
+available. To get notified only for security updates,
+http://www.rai.com/admin/reports/updates/settings.
+
