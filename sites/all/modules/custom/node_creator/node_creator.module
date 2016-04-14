@@ -1,0 +1,14 @@
+<?php
+function metatag_replace_menu() {
+  $items['admin/config/search/metatags/replace'] = array(
+    'title callback' => 'Change Metatags',
+    'title' => 'MetaTag Replace',
+    'description' => 'Replace the MetaTags',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('node_creator_form'),
+    'access arguments' => array('metatag_replace'),
+    'file' => 'metatag_replace_admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}

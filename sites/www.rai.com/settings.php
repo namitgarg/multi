@@ -579,3 +579,15 @@ $conf['404_fast_html'] = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
  * Remove the leading hash signs to disable.
  */
 # $conf['allow_authorize_operations'] = FALSE;
+if (isset($conf['memcache_servers'])) {
+  $conf['cache_backends'][] = './sites/all/modules/memcache/memcache.inc';
+  $conf['cache_default_class'] = 'MemCacheDrupal';
+  $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
+}
+else{
+  $conf['cache_default_class'] = 'DrupalDatabaseCache';
+  $conf['cache_class_cache_page'] = 'DrupalDatabaseCache';
+}
+if (file_exists('/var/www/site-php')) {
+  require '/var/www/site-php/pageone/whetstone-settings.inc';
+}
