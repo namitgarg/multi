@@ -1,6 +1,0 @@
-You are about to execute 'cron' non-interactively (--yes forced) on all of the following targets:
-  C:\xampp\htdocs\multi#www.rai.com
-  C:\xampp\htdocs\multi#www.gonyon.com
-  C:\xampp\htdocs\multi#www.brownphilip.com
-  C:\xampp\htdocs\multi#default
-Continue?  (y/n): 
