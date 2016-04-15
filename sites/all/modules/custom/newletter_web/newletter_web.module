@@ -1,0 +1,28 @@
+<?php
+
+function newletter_web_menu() {
+  $items['admin/config/search/metatags/replace'] = array(
+    'title' => 'Newsletter Modify',
+    'description' => 'Modify the content of the Webform for News letter',
+    'page callback' => 'drupal_get_form',
+    'access arguments' => array('access_content'),
+    'file' => 'newletter_web.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}
+
+function newletter_web_form_webform_client_form_5_alter(&$form, &$form_state, $form_id) {
+  $form['#validate'][] = 'newletter_web_validate_custom';
+}
+
+function newletter_web_validate_custom(&$form, &$form_state) {
+  if (!preg_match("/^[a-zA-Z ]*$/", $form_state['values']['submitted']['name'])) {
+    form_set_error("name", "Name should not contain any special characters");
+  }
+ $phone_number = (float) ($form_state['values']['submitted']['phone']);
+  $decimal = strpos($phone_number, ".");
+  if ($phone_number < 9000000000 || $phone_number > 9999999999 || !empty($decimal)) {
+    form_set_error("phone", "Entered Phome number is invalid");
+  }
+}
