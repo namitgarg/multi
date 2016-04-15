@@ -1,0 +1,1 @@
+This module will work like node genrator instead it will fetch data from single page only

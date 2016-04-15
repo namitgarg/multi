@@ -1,6 +1,6 @@
 <?php
 function metatag_replace_menu() {
-  $items['admin/config/search/metatags/replace'] = array(
+  $items['admin/config/system/node-creator'] = array(
     'title callback' => 'Change Metatags',
     'title' => 'MetaTag Replace',
     'description' => 'Replace the MetaTags',
