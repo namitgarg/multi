@@ -1,5 +1,5 @@
 <?php
-function metatag_replace_menu() {
+function node_creator_menu() {
   $items['admin/config/system/node-creator'] = array(
     'title callback' => 'Change Metatags',
     'title' => 'MetaTag Replace',
