@@ -7,7 +7,7 @@ function node_creator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_creator_form'),
     'access arguments' => array('metatag_replace'),
-    'file' => 'metatag_replace_admin.inc',
+    'file' => 'node_creator.inc',
     'type' => MENU_LOCAL_TASK,
   );
   return $items;

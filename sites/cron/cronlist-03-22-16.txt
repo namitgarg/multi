@@ -1,0 +1,8 @@
+C.xampp.htdocs.multi#default             >> Cron run successful.                                                              [success]
+C.xampp.htdocs.multi#www.brownphilip.com >> Cron run successful.                                                              [success]
+C.xampp.htdocs.multi#www.gonyon.com      >> Cron run successful.                                                              [success]
+C.xampp.htdocs.multi#www.rai.com         >> Cron run successful.                                                              [success]
+C.xampp.htdocs.multi#default             >> Cron run successful.                                                              [success]
+C.xampp.htdocs.multi#www.brownphilip.com >> Cron run successful.                                                              [success]
+C.xampp.htdocs.multi#www.gonyon.com      >> Cron run successful.                                                              [success]
+C.xampp.htdocs.multi#www.rai.com         >> Cron run successful.                                                              [success]
