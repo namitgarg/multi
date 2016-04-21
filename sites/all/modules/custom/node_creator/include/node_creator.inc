@@ -1,5 +1,18 @@
 <?php
 
+function node_creator_type_list() {
+  $typedata = node_type_get_types();
+  foreach ($typedata as $values1) {
+    $type_machine_name = $values1->type;
+    $type_human_name = $values1->name;
+    $func_content_type[$type_machine_name] = $type_human_name;
+  }
+
+  return $func_content_type;
+}
+
+
+
 function node_creator_form($form, &$form_state) {
   $content_type = node_creator_type_list();
   $my_fields = field_info_instances("node", "pages");
@@ -25,32 +38,11 @@ function node_creator_form($form, &$form_state) {
   );
   return $form;
 }
-/*
- * Function to get list of all content type
- */
-function node_creator_type_list() {
-  $typedata = node_type_get_types();
-  foreach ($typedata as $values1) {
-    $type_machine_name = $values1->type;
-    $type_human_name = $values1->name;
-    $func_content_type[$type_machine_name] = $type_human_name;
-  }
 
-  return $func_content_type;
-}
-
-/*
- * Submit Handler for form
- */
 function node_creator_submit($form, &$form_state) {
-  print("<pre>");
   drupal_set_message("form submited ");
-  node_creator_fieldsname($form_state['values']['content_type']);
-  //node_creator_fetchdata("http://www.associatesinplasticsurgery.com");
+  node_creator_fetchdata("http://www.associatesinplasticsurgery.com");
 }
-/*
- * Function to fetch data from the web page
- */
 function node_creator_fetchdata($url) {
     module_load_include('php', 'node_creator', 'include/simple_html_dom');  
   $html = file_get_html($url);
@@ -64,24 +56,4 @@ function node_creator_fetchdata($url) {
   }
       die;
   drupal_set_message("gethtml");
-}
-
-function node_creator_fieldsname($type)
-{
-  print($type);
-  $field_list=field_info_instances('node',$type);
-  print_r($field_list);
-  $field_details=array();
- // $field_machine_name=array();
-  //$field_human_name=array();
-  foreach($field_list as $values)
-  {
-    $field_details['human_name'][]=$values['label'];
-    $field_details['machine_name'][]=$values['field_name'];
-    $field_details['type'][]=$values['widget']['type'];
-      
-  }
-  print_r($field_details);
-  die;
-  
 }
