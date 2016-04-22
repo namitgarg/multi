@@ -2,7 +2,11 @@
 
 function node_creator_form($form, &$form_state) {
   $content_type = node_creator_type_list();
-  $my_fields = field_info_instances("node", "pages");
+  
+  $field_info = node_creator_fields_name("page");
+    print_r($field_info);
+    print("fff");
+    //$field_list[$field_info['machine_name']]=$field_info['human_name'];
   $form['title'] = array(
     '#type' => 'textfield',
     '#required' => TRUE,
@@ -17,6 +21,15 @@ function node_creator_form($form, &$form_state) {
     '#required' => TRUE,
     '#description' => t('Select the content type'),
   );
+//  $form['field_name'] = array(
+//    '#type' => 'select',
+//    //'#options' => $field_list,
+//    '#title' => t('Field Name'),
+//    '#validated' => TRUE,
+//    '#required' => TRUE,
+//    '#description' => t('Select the Field Name'),
+//  );
+  
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => 'Submit',
@@ -54,26 +67,18 @@ function node_creator_submit($form, &$form_state) {
 function node_creator_fetchdata($url) {
     module_load_include('php', 'node_creator', 'include/simple_html_dom');  
   $html = file_get_html($url);
-//foreach($html->find('span') as $element)
-//{
-       //echo $element.'<br>';
-//}
   foreach ($html->find('img') as $element) {
     print($element . '<br>') ;
-
   }
       die;
   drupal_set_message("gethtml");
 }
 
-function node_creator_fieldsname($type)
+function node_creator_fields_name($type)
 {
   print($type);
   $field_list=field_info_instances('node',$type);
-  print_r($field_list);
   $field_details=array();
- // $field_machine_name=array();
-  //$field_human_name=array();
   foreach($field_list as $values)
   {
     $field_details['human_name'][]=$values['label'];
@@ -81,7 +86,6 @@ function node_creator_fieldsname($type)
     $field_details['type'][]=$values['widget']['type'];
       
   }
-  print_r($field_details);
-  die;
+  return $field_details;
   
 }
