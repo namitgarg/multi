@@ -3,3 +3,4 @@ sites/*/themes/*/.sass-cache/*
 /sites/*/themes/*/.sass-cache
 sites/*/themes/*/.sass-cache
 /nbproject/private/
+/sites/nbproject/private/

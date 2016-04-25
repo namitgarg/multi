@@ -1,13 +1,25 @@
 <?php
+
+
+function node_creator_permission() {
+  return array(
+    'node_creator' => array(
+      'title' => t('Node Creator'),
+      'description' => t('Allows to create node'),
+    ),
+  );
+}
+
+
 function node_creator_menu() {
   $items['admin/config/system/node-creator'] = array(
-    'title callback' => 'Change Metatags',
-    'title' => 'MetaTag Replace',
-    'description' => 'Replace the MetaTags',
+    'title callback' => 'Create Node',
+    'title' => 'Node creator',
+    'description' => 'create nodes form a page',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_creator_form'),
-    'access arguments' => array('metatag_replace'),
-    'file' => 'node_creator.inc',
+    'access arguments' => array('node_creator'),
+    'file' => 'include/node_creator.inc',
     'type' => MENU_LOCAL_TASK,
   );
   return $items;
