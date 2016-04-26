@@ -26,8 +26,11 @@ function node_creator_fields_name($type) {
   $field_list = field_info_instances('node', $type);
   $field_details = array();
   foreach ($field_list as $values) {
-    $field_details[$values['field_name']] = $values['label'];
+    if(isset($values['label'])){
+      $field_details[$values['field_name']] = $values['label'];
     $field_type[] = $values['widget']['type'];
+    }
+    
   }
   return $field_details;
 }
@@ -39,6 +42,7 @@ function node_creator_fields_name($type) {
 function node_creator_form($form, &$form_state) {
   $content_type = node_creator_type_list();
   $field_info = node_creator_fields_name("article");
+    $selected = isset($form_state['values']['content_type']) ? $form_state['values']['content_type'] :array('body'=>'Body');
 
   $form['title'] = array(
     '#type' => 'textfield',
