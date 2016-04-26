@@ -19,7 +19,7 @@ function node_creator_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('node_creator_form'),
     'access arguments' => array('node_creator'),
-    'file' => 'include/node_creator.inc',
+    'file' => 'includes/node_creator.inc',
     'type' => MENU_LOCAL_TASK,
   );
   return $items;
