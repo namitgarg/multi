@@ -79,60 +79,60 @@ function metatag_replace_form($form, &$form_state) {
   $form['search_box'] = array(
     '#type' => 'textfield',
     '#required' => TRUE,
-    '#title' => t('Search'),
+    '#title' => t("Search"),
     '#default_value' => $intial_search,
-    '#description' => t('Enter the text to be searched for'),
+    '#description' => t("Enter the text to be searched for"),
   );
   $form['replace_box'] = array(
     '#type' => 'textfield',
-    '#title' => t('Replace'),
+    '#title' => t("Replace"),
     '#default_value' => $default_replace,
-    '#description' => t('Enter the text to be replaced with'),
+    '#description' => t("Enter the text to be replaced with"),
   );
   $form['content_type'] = array(
     '#type' => 'select',
     '#options' => $content_type,
-    '#title' => t('Content type'),
+    '#title' => t("Content type"),
     '#validated' => TRUE,
     '#required' => TRUE,
     '#default_value' => $default_type,
-    '#description' => t('Select the content type'),
+    '#description' => t("Select the Content type"),
   );
   $form['case'] = array(
     '#type' => 'select',
     '#options' => $case_list,
-    '#title' => t('Case Sensitive'),
+    '#title' => t("Case Sensitive"),
     '#validated' => TRUE,
     '#required' => TRUE,
     '#default_value' => $default_case,
-    '#description' => t('Select whether to Search  Search with case Sensitive or not'),
+    '#description' => t("Select whether to Search  Search with case Sensitive or not"),
   );
   $form['exact_match'] = array(
     '#type' => 'checkbox',
     '#options' => $session_match,
-    '#title' => 'Exact Match',
+    '#title' => t("Exact Match"),
     '#validated' => TRUE,
-    '#description' => t('Select to search exact Words.'),
+    '#description' => t("Select to search exact words."),
     '#default_value' => $session_match,
   );
   $form['field_select'] = array(
     '#type' => 'select',
     '#options' => $field_list,
-    '#title' => t('Field'),
+    '#title' => t("Field"),
     '#validated' => TRUE,
     '#required' => TRUE,
     '#default_value' => $default_field,
-    '#description' => t('Choose meta fields to be Searched'),
+    '#description' => t("Choose meta fields to be Searched"),
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => 'Search',
+    '#value' => t("Search"),
     '#validate' => array('metatag_replace_form_search_validate'),
     '#submit' => array('metatag_replace_form_search_submit'),
   );
   $form['submit1'] = array(
     '#type' => 'submit',
-    '#value' => 'Replace',
+    '#value' => t("Replace"),
     '#validate' => array('metatag_replace_form_replace_validate'),
     '#submit' => array('metatag_replace_form_replace_submit'),
   );
@@ -165,7 +165,7 @@ function metatag_replace_form($form, &$form_state) {
 function metatag_replace_form_search_validate($form, &$form_state) {
   $output = metatag_replace_xss_check($form_state['values']['search_box']);
   if (!$output) {
-    form_set_error('search_box', t('Please Do not Enter any HTML or Php tags'));
+    form_set_error('search_box', t("Do not Enter any HTML or Php tags"));
   }
 }
 /**
@@ -173,14 +173,14 @@ function metatag_replace_form_search_validate($form, &$form_state) {
  */
 function metatag_replace_form_replace_validate($form, &$form_state) {
   if (empty($form_state['values']['replace_box'])) {
-    form_set_error('replace_box', t('Replace Field is empty.'));
+    form_set_error('replace_box', t("Replace Field is empty."));
   }
   if ($form_state['values']['replace_box'] == $form_state['values']['search_box']) {
-    form_set_error('replace_box', t('Search and Replace Texts are Same.'));
+    form_set_error('replace_box', t("Search and Replace Texts are Same."));
   }
   $output = metatag_replace_xss_check($form_state['values']['replace_box']);
   if ($output == FALSE) {
-    form_set_error('replace_box', t('Please Do not Enter any HTML or Php tags.'));
+    form_set_error('replace_box', t("Please Do not Enter any HTML or Php tags."));
   }
 }
 
@@ -226,11 +226,11 @@ function metatag_replace_search_operation($form, &$form_state, $opn) {
   $batch = array(
     'operations' => array(),
     'finished' => 'metatag_replace_finish_batch_search',
-    'title' => t('Processing  All Node For Searching'),
-    'init_message' => t('Starting Metatag Search Operation'),
-    'progress_message' => t('Processed @current out of @total Nodes'),
+    'title' => t("Processing  All Node For Searching"),
+    'init_message' => t("Starting Metatag Search Operation"),
+    'progress_message' => t("Processed @current out of @total Nodes"),
     'file' => drupal_get_path('module', 'metatag_replace') . '/metatag_replace_admin.inc',
-    'error_message' => t('MetaTag Module has encountered an error.'),
+    'error_message' => t("MetaTag Module has encountered an error."),
   );
   // Query to get nid from node table.
   $query = db_select('node', 'vd')
@@ -275,45 +275,17 @@ function metatag_replace_start_batch_search($values, &$context) {
   $context['results']['replace-word'] = $replaceword;
   $context['results']['opn'] = $_SESSION['metatag_replace_opn'];
   $node = node_load($nid_list);
+  $meta_field=$_SESSION['metatag_replace_field_result'];
+  $node_title = $node->title;
+  $meta_nid = $values;
   // To check all nodes that have Meta tags and store them.
   if (!empty($node->metatags[$node->language]['title']) || !empty($node->metatags[$node->language]['description']) || !empty($node->metatags[$node->language]['abstract']) || !empty($node->metatags[$node->language]['keywords'])) {
-    if ($_SESSION['metatag_replace_field_result'] == 'title') {
-      $meta_title = $node->metatags[$node->language]['title']['value'];
-      $context['message'] = "Meta Title is working...";
-      $context['results']['field_result'] = "title";
+    
+    if ($_SESSION['metatag_replace_field_result'] != 'all') {
+      $meta_title = $node->metatags[$node->language][$meta_field]['value'];
+      $context['message'] = t("Meta $meta_field is working...");
+      $context['results']['field_result'] = "$meta_field";
       $match_field = $meta_title;
-    }
-    elseif ($_SESSION['metatag_replace_field_result'] == 'description') {
-      $meta_description = $node->metatags[$node->language]['description']['value'];
-      $context['message'] = "Meta Description is working...";
-      $context['results']['field_result'] = "description";
-      $match_field = $meta_description;
-    }
-    elseif ($_SESSION['metatag_replace_field_result'] == 'abstract') {
-      $meta_abstract = $node->metatags[$node->language]['abstract']['value'];
-      $context['message'] = "Meta Abstract is working...";
-      $context['results']['field_result'] = "abstract";
-      $match_field = $meta_abstract;
-    }
-    elseif ($_SESSION['metatag_replace_field_result'] == 'keywords') {
-      $meta_keywords = $node->metatags[$node->language]['keywords']['value'];
-      $context['message'] = "Meta Keywords is working...";
-      $context['results']['field_result'] = "keywords";
-      $match_field = $meta_keywords;
-    }
-    elseif ($_SESSION['metatag_replace_field_result'] == 'all') {
-      $meta_title = $node->metatags[$node->language]['title']['value'];
-      $meta_description = $node->metatags[$node->language]['description']['value'];
-      $meta_abstract = $node->metatags[$node->language]['abstract']['value'];
-      $meta_keywords = $node->metatags[$node->language]['keywords']['value'];
-      $context['message'] = "Meta All Tags  is working ....";
-      $context['results']['field_result'] = "all";
-    }
-    $node_title = $node->title;
-    $meta_nid = $values;
-  }
-  // To match individual Meta Fields.
-  if ($_SESSION['metatag_replace_field_result'] != 'all') {
     if ($_SESSION['metatag_replace_match'] == '1') {
       if ($_SESSION['metatag_replace_case'] == 'insensitive') {
         preg_match("/\b$searchword\b/i", $match_field, $matches);
@@ -352,152 +324,162 @@ function metatag_replace_start_batch_search($values, &$context) {
       }
     }
   }
-  // To Match all MetaTag Fields.
-  elseif ($_SESSION['metatag_replace_field_result'] == 'all') {
-    if ($_SESSION['metatag_replace_match'] == '1') {
-      if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-        preg_match("/\b$searchword\b/i", $meta_title, $matches);
-        preg_match("/\b$searchword\b/i", $meta_description, $matches1);
-        preg_match("/\b$searchword\b/i", $meta_abstract, $matches2);
-        preg_match("/\b$searchword\b/i", $meta_keywords, $matches3);
-        if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
-          if (!empty($matches)) {
-            $context['results']['matches']['title'][] = $meta_title;
+    
+    elseif ($_SESSION['metatag_replace_field_result'] == 'all') {
+      $meta_title = $node->metatags[$node->language]['title']['value'];
+      $meta_description = $node->metatags[$node->language]['description']['value'];
+      $meta_abstract = $node->metatags[$node->language]['abstract']['value'];
+      $meta_keywords = $node->metatags[$node->language]['keywords']['value'];
+      $context['message'] = t("Meta All Tags  is working...");
+      $context['results']['field_result'] = "all";
+      if ($_SESSION['metatag_replace_match'] == '1') {
+        if ($_SESSION['metatag_replace_case'] == 'insensitive') {
+          preg_match("/\b$searchword\b/i", $meta_title, $matches);
+          preg_match("/\b$searchword\b/i", $meta_description, $matches1);
+          preg_match("/\b$searchword\b/i", $meta_abstract, $matches2);
+          preg_match("/\b$searchword\b/i", $meta_keywords, $matches3);
+          if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
+            if (!empty($matches)) {
+              $context['results']['matches']['title'][] = $meta_title;
+            }
+            else {
+              $context['results']['matches']['title'][] = "";
+            }
+            if (!empty($matches1)) {
+              $context['results']['matches']['description'][] = $meta_description;
+            }
+            else {
+              $context['results']['matches']['description'][] = "";
+            }
+            if (!empty($matches2)) {
+              $context['results']['matches']['abstract'][] = $meta_abstract;
+            }
+            else {
+              $context['results']['matches']['abstract'][] = "";
+            }
+            if (!empty($matches3)) {
+              $context['results']['matches']['keywords'][] = $meta_keywords;
+            }
+            else {
+              $context['results']['matches']['keywords'][] = "";
+            }
+            $context['results']['nid'][] = $meta_nid;
+            $context['results']['node_title'][] = $node_title;
           }
-          else {
-            $context['results']['matches']['title'][] = "";
+        }
+        else {
+          preg_match("/\b$searchword\b/i", $meta_title, $matches);
+          preg_match("/\b$searchword\b/i", $meta_description, $matches1);
+          preg_match("/\b$searchword\b/i", $meta_abstract, $matches2);
+          preg_match("/\b$searchword\b/i", $meta_keywords, $matches3);
+          if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
+            if (!empty($matches)) {
+              $context['results']['matches']['title'][] = $meta_title;
+            }
+            else {
+              $context['results']['matches']['title'][] = "";
+            }
+            if (!empty($matches1)) {
+              $context['results']['matches']['description'][] = $meta_description;
+            }
+            else {
+              $context['results']['matches']['description'][] = "";
+            }
+            if (!empty($matches2)) {
+              $context['results']['matches']['abstract'][] = $meta_abstract;
+            }
+            else {
+              $context['results']['matches']['abstract'][] = "";
+            }
+            if (!empty($matches3)) {
+              $context['results']['matches']['keywords'][] = $meta_keywords;
+            }
+            else {
+              $context['results']['matches']['keywords'][] = "";
+            }
+            $context['results']['nid_all'][] = $meta_nid;
+            $context['results']['node_title_all'][] = $node_title;
           }
-          if (!empty($matches1)) {
-            $context['results']['matches']['description'][] = $meta_description;
-          }
-          else {
-            $context['results']['matches']['description'][] = "";
-          }
-          if (!empty($matches2)) {
-            $context['results']['matches']['abstract'][] = $meta_abstract;
-          }
-          else {
-            $context['results']['matches']['abstract'][] = "";
-          }
-          if (!empty($matches3)) {
-            $context['results']['matches']['keywords'][] = $meta_keywords;
-          }
-          else {
-            $context['results']['matches']['keywords'][] = "";
-          }
-          $context['results']['nid'][] = $meta_nid;
-          $context['results']['node_title'][] = $node_title;
         }
       }
       else {
-        preg_match("/\b$searchword\b/i", $meta_title, $matches);
-        preg_match("/\b$searchword\b/i", $meta_description, $matches1);
-        preg_match("/\b$searchword\b/i", $meta_abstract, $matches2);
-        preg_match("/\b$searchword\b/i", $meta_keywords, $matches3);
-        if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
-          if (!empty($matches)) {
-            $context['results']['matches']['title'][] = $meta_title;
+
+        if ($_SESSION['metatag_replace_case'] == 'insensitive') {
+          preg_match("/$searchword/i", $meta_title, $matches);
+          preg_match("/$searchword/i", $meta_description, $matches1);
+          preg_match("/$searchword/i", $meta_abstract, $matches2);
+          preg_match("/$searchword/i", $meta_keywords, $matches3);
+          if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
+            if (!empty($matches)) {
+              $context['results']['matches']['title'][] = $meta_title;
+            }
+            else {
+              $context['results']['matches']['title'][] = "";
+            }
+            if (!empty($matches1)) {
+              $context['results']['matches']['description'][] = $meta_description;
+            }
+            else {
+              $context['results']['matches']['description'][] = "";
+            }
+            if (!empty($matches2)) {
+              $context['results']['matches']['abstract'][] = $meta_abstract;
+            }
+            else {
+              $context['results']['matches']['abstract'][] = "";
+            }
+            if (!empty($matches3)) {
+              $context['results']['matches']['keywords'][] = $meta_keywords;
+            }
+            else {
+              $context['results']['matches']['keywords'][] = "";
+            }
+            $context['results']['nid'][] = $meta_nid;
+            $context['results']['node_title'][] = $node_title;
           }
-          else {
-            $context['results']['matches']['title'][] = "";
+        }
+        else {
+          preg_match("/$searchword/", $meta_title, $matches);
+          preg_match("/$searchword/", $meta_description, $matches1);
+          preg_match("/$searchword/", $meta_abstract, $matches2);
+          preg_match("/$searchword/", $meta_keywords, $matches3);
+          if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
+            if (!empty($matches)) {
+              $context['results']['matches']['title'][] = $meta_title;
+            }
+            else {
+              $context['results']['matches']['title'][] = "";
+            }
+            if (!empty($matches1)) {
+              $context['results']['matches']['description'][] = $meta_description;
+            }
+            else {
+              $context['results']['matches']['description'][] = "";
+            }
+
+            if (!empty($matches2)) {
+              $context['results']['matches']['abstract'][] = $meta_abstract;
+            }
+            else {
+              $context['results']['matches']['abstract'][] = "";
+            }
+            if (!empty($matches3)) {
+              $context['results']['matches']['keywords'][] = $meta_keywords;
+            }
+            else {
+              $context['results']['matches']['keywords'][] = "";
+            }
+            $context['results']['nid'][] = $meta_nid;
+            $context['results']['node_title'][] = $node_title;
           }
-          if (!empty($matches1)) {
-            $context['results']['matches']['description'][] = $meta_description;
-          }
-          else {
-            $context['results']['matches']['description'][] = "";
-          }
-          if (!empty($matches2)) {
-            $context['results']['matches']['abstract'][] = $meta_abstract;
-          }
-          else {
-            $context['results']['matches']['abstract'][] = "";
-          }
-          if (!empty($matches3)) {
-            $context['results']['matches']['keywords'][] = $meta_keywords;
-          }
-          else {
-            $context['results']['matches']['keywords'][] = "";
-          }
-          $context['results']['nid_all'][] = $meta_nid;
-          $context['results']['node_title_all'][] = $node_title;
         }
       }
     }
-    else {
-
-      if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-        preg_match("/$searchword/i", $meta_title, $matches);
-        preg_match("/$searchword/i", $meta_description, $matches1);
-        preg_match("/$searchword/i", $meta_abstract, $matches2);
-        preg_match("/$searchword/i", $meta_keywords, $matches3);
-        if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
-          if (!empty($matches)) {
-            $context['results']['matches']['title'][] = $meta_title;
-          }
-          else {
-            $context['results']['matches']['title'][] = "";
-          }
-          if (!empty($matches1)) {
-            $context['results']['matches']['description'][] = $meta_description;
-          }
-          else {
-            $context['results']['matches']['description'][] = "";
-          }
-          if (!empty($matches2)) {
-            $context['results']['matches']['abstract'][] = $meta_abstract;
-          }
-          else {
-            $context['results']['matches']['abstract'][] = "";
-          }
-          if (!empty($matches3)) {
-            $context['results']['matches']['keywords'][] = $meta_keywords;
-          }
-          else {
-            $context['results']['matches']['keywords'][] = "";
-          }
-          $context['results']['nid'][] = $meta_nid;
-          $context['results']['node_title'][] = $node_title;
-        }
-      }
-      else {
-        preg_match("/$searchword/", $meta_title, $matches);
-        preg_match("/$searchword/", $meta_description, $matches1);
-        preg_match("/$searchword/", $meta_abstract, $matches2);
-        preg_match("/$searchword/", $meta_keywords, $matches3);
-        if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
-          if (!empty($matches)) {
-            $context['results']['matches']['title'][] = $meta_title;
-          }
-          else {
-            $context['results']['matches']['title'][] = "";
-          }
-          if (!empty($matches1)) {
-            $context['results']['matches']['description'][] = $meta_description;
-          }
-          else {
-            $context['results']['matches']['description'][] = "";
-          }
-
-          if (!empty($matches2)) {
-            $context['results']['matches']['abstract'][] = $meta_abstract;
-          }
-          else {
-            $context['results']['matches']['abstract'][] = "";
-          }
-          if (!empty($matches3)) {
-            $context['results']['matches']['keywords'][] = $meta_keywords;
-          }
-          else {
-            $context['results']['matches']['keywords'][] = "";
-          }
-          $context['results']['nid'][] = $meta_nid;
-          $context['results']['node_title'][] = $node_title;
-        }
-      }
-    }
+ 
   }
-  $context['message'] = "Matching the Meta Tags";
+
+  
+  $context['message'] = t("Matching the Meta Tags");
 }
 
 /**
@@ -540,7 +522,7 @@ function metatag_replace_finish_batch_search($success, $results, $operations) {
   else {
 
     $error_operation = reset($operations);
-    drupal_set_message(t('An error occurred while processing @operation with arguments : @args', array(
+    drupal_set_message(t("An error occurred while processing @operation with arguments : @args", array(
       '@operation' => $error_operation[0],
       '@args' => print_r($error_operation[0], TRUE),
     )));
@@ -556,12 +538,12 @@ function metatag_replace_finish_batch_search($success, $results, $operations) {
 function metatag_replace_confirm_form($form, &$form_state) {
   $form['confirm'] = array(
     '#type' => 'submit',
-    '#value' => 'Confirm',
+    '#value' => t("Confirm"),
     '#submit' => array('metatag_replace_confirm_form_submit'),
   );
   $form['cancel'] = array(
     '#type' => 'submit',
-    '#value' => 'Cancel',
+    '#value' => t("Cancel"),
     '#submit' => array('metatag_replace_cancel_form_submit'),
   );
   if ($_SESSION['metatag_replace_show_result'] == 'TRUE') {
@@ -583,11 +565,11 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
   $batch1 = array(
     'operations' => array(),
     'finished' => 'metatag_replace_batch_fix_finished',
-    'title' => t('Replacing Meta tags Fields'),
-    'init_message' => t('Metatag Replace Operation'),
-    'progress_message' => t('Processed @current out of @total Nodes'),
+    'title' => t("Replacing Meta tags Fields"),
+    'init_message' => t("Metatag Replace Operation"),
+    'progress_message' => t("Processed @current out of @total Nodes"),
     'file' => drupal_get_path('module', 'metatag_replace') . '/metatag_replace_admin.inc',
-    'error_message' => t('Meta tag Module has encountered an error.'),
+    'error_message' => t("Meta tag Module has encountered an error."),
   );
   if ($_SESSION['metatag_replace_result_of_search']['field_result'] != 'all') {
     $replace_list = $_SESSION['metatag_replace_result_of_search']['matches'];
@@ -682,6 +664,7 @@ function metatag_replace_start_batch_replace_all($node_title, $nid, $meta_list, 
   $replaceword = $_SESSION['metatag_replace_word_replace'];
   if ($_SESSION['metatag_replace_match'] == '1') {
     if ($_SESSION['metatag_replace_case'] == 'insensitive') {
+      
       $replace_result = preg_replace("/\b$searchword\b/i", $replaceword, $meta_list);
       $replace_result2 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_description);
       $replace_result3 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_abstract);
@@ -744,11 +727,16 @@ function metatag_replace_start_batch_replace_all($node_title, $nid, $meta_list, 
  */
 function metatag_replace_batch_fix_finished($success, $results, $operations) {
   if ($success) {
+    $searchword = $_SESSION['metatag_replace_word_search'];
+    $replaceword = $_SESSION['metatag_replace_word_replace'];
+    $count=count($results[nid]);
     $_SESSION['metatag_replace_result_of_replace'] = $results;
+    drupal_set_message(t("Replaced %count occurences of $searchword in pages with $replaceword",array('%count' => $count)), 'status');
+
   }
   else {
     $error_operation = reset($operations);
-    drupal_set_message(t('An error occurred while processing @operation with arguments : @args', array(
+    drupal_set_message(t("An error occurred while processing @operation with arguments : @args", array(
       '@operation' => $error_operation[0],
       '@args' => print_r($error_operation[0], TRUE),
     )));
