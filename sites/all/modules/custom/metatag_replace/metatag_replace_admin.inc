@@ -216,8 +216,8 @@ function metatag_replace_search_operation($form, &$form_state, $opn) {
   $_SESSION['metatag_replace_word_search'] = $form_state['values']['search_box'];
   $_SESSION['metatag_replace_word_replace'] = $form_state['values']['replace_box'];
   $_SESSION['metatag_replace_field_result'] = $form_state['values']['field_select'];
-  $_SESSION['metatag_replace_case'] = $form_state['values']['case'];
-  $_SESSION['metatag_replace_match'] = $form_state['values']['exact_match'];
+  $_SESSION['metatag_replace_case'] = ($form_state['values']['case']=="insensitive"?"i":"");
+  $_SESSION['metatag_replace_match'] = ($form_state['values']['exact_match']=="insensitive"?"i":"");
   $_SESSION['metatag_replace_show_result'] = "TRUE";
   $_SESSION['metatag_replace_opn'] = $opn;
   $type = $form_state['values']['content_type'];
@@ -276,9 +276,7 @@ function metatag_replace_start_batch_search($values, &$context) {
   $context['results']['opn'] = $_SESSION['metatag_replace_opn'];
   $node = node_load($nid_list);
   $meta_field=$_SESSION['metatag_replace_field_result'];
-  $meta_case=($_SESSION['metatag_replace_case']=="insensitive"?"i":"");
-  $meta_match=($_SESSION['metatag_replace_match']=="1"?"\b":"");
-  $search_string="/$meta_match$searchword$meta_match/$meta_case";
+  $search_string="/".$_SESSION['metatag_replace_case'].$searchword.$_SESSION['metatag_replace_case']."/".$_SESSION['metatag_replace_case'];
   $node_title = $node->title;
   $meta_nid = $values;
   // To check all nodes that have Meta tags and store them.
@@ -477,22 +475,24 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
 function metatag_replace_start_batch_replace_single($node_title, $nid, $meta_list, &$context) {
   $searchword = $_SESSION['metatag_replace_word_search'];
   $replaceword = $_SESSION['metatag_replace_word_replace'];
-  if ($_SESSION['metatag_replace_match'] == '1') {
-    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-      $replace_result = preg_replace("/\b$searchword\b/i", $replaceword, $meta_list);
-    }
-    else {
-      $replace_result = preg_replace("/\b$searchword\b/", $replaceword, $meta_list);
-    }
-  }
-  else {
-    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-      $replace_result = preg_replace("/$searchword/i", $replaceword, $meta_list);
-    }
-    else {
-      $replace_result = preg_replace("/$searchword/", $replaceword, $meta_list);
-    }
-  }
+  $search_string="/".$_SESSION['metatag_replace_case'].$searchword.$_SESSION['metatag_replace_case']."/".$_SESSION['metatag_replace_case'];
+  $replace_result = preg_replace($search_string, $replaceword, $meta_list);
+//  if ($_SESSION['metatag_replace_match'] == '1') {
+//    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
+//      $replace_result = preg_replace("/\b$searchword\b/i", $replaceword, $meta_list);
+//    }
+//    else {
+//      $replace_result = preg_replace("/\b$searchword\b/", $replaceword, $meta_list);
+//    }
+//  }
+//  else {
+//    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
+//      $replace_result = preg_replace("/$searchword/i", $replaceword, $meta_list);
+//    }
+//    else {
+//      $replace_result = preg_replace("/$searchword/", $replaceword, $meta_list);
+//    }
+//  }
   $context['results']['replaced'][] = $replace_result;
   $context['results']['nid'][] = $nid;
   $context['results']['node_title'][] = $node_title;
@@ -520,35 +520,41 @@ function metatag_replace_start_batch_replace_single($node_title, $nid, $meta_lis
 function metatag_replace_start_batch_replace_all($node_title, $nid, $meta_list, $meta_description, $meta_abstract, $meta_keywords, &$context) {
   $searchword = $_SESSION['metatag_replace_word_search'];
   $replaceword = $_SESSION['metatag_replace_word_replace'];
-  if ($_SESSION['metatag_replace_match'] == '1') {
-    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
+  $search_string="/".$_SESSION['metatag_replace_case'].$searchword.$_SESSION['metatag_replace_case']."/".$_SESSION['metatag_replace_case'];
+  $replace_result = preg_replace($search_string, $replaceword, $meta_list);
+  $replace_result2 = preg_replace($search_string, $replaceword, $meta_description);
+  $replace_result3 = preg_replace($search_string, $replaceword, $meta_abstract);
+  $replace_result4 = preg_replace($search_string, $replaceword, $meta_keywords);
       
-      $replace_result = preg_replace("/\b$searchword\b/i", $replaceword, $meta_list);
-      $replace_result2 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_description);
-      $replace_result3 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_abstract);
-      $replace_result4 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_keywords);
-    }
-    else {
-      $replace_result = preg_replace("/\b$searchword\b/", $replaceword, $meta_list);
-      $replace_result2 = preg_replace("/\b$searchword\b/", $replaceword, $meta_description);
-      $replace_result3 = preg_replace("/\b$searchword\b/", $replaceword, $meta_abstract);
-      $replace_result4 = preg_replace("/\b$searchword\b/", $replaceword, $meta_keywords);
-    }
-  }
-  else {
-    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-      $replace_result = preg_replace("/$searchword/i", $replaceword, $meta_list);
-      $replace_result2 = preg_replace("/$searchword/i", $replaceword, $meta_description);
-      $replace_result3 = preg_replace("/$searchword/i", $replaceword, $meta_abstract);
-      $replace_result4 = preg_replace("/$searchword/i", $replaceword, $meta_keywords);
-    }
-    else {
-      $replace_result = preg_replace("/$searchword/", $replaceword, $meta_list);
-      $replace_result2 = preg_replace("/$searchword/", $replaceword, $meta_description);
-      $replace_result3 = preg_replace("/$searchword/", $replaceword, $meta_abstract);
-      $replace_result4 = preg_replace("/$searchword/", $replaceword, $meta_keywords);
-    }
-  }
+//  if ($_SESSION['metatag_replace_match'] == '1') {
+//    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
+//      
+//      $replace_result = preg_replace("/\b$searchword\b/i", $replaceword, $meta_list);
+//      $replace_result2 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_description);
+//      $replace_result3 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_abstract);
+//      $replace_result4 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_keywords);
+//    }
+//    else {
+//      $replace_result = preg_replace("/\b$searchword\b/", $replaceword, $meta_list);
+//      $replace_result2 = preg_replace("/\b$searchword\b/", $replaceword, $meta_description);
+//      $replace_result3 = preg_replace("/\b$searchword\b/", $replaceword, $meta_abstract);
+//      $replace_result4 = preg_replace("/\b$searchword\b/", $replaceword, $meta_keywords);
+//    }
+//  }
+//  else {
+//    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
+//      $replace_result = preg_replace("/$searchword/i", $replaceword, $meta_list);
+//      $replace_result2 = preg_replace("/$searchword/i", $replaceword, $meta_description);
+//      $replace_result3 = preg_replace("/$searchword/i", $replaceword, $meta_abstract);
+//      $replace_result4 = preg_replace("/$searchword/i", $replaceword, $meta_keywords);
+//    }
+//    else {
+//      $replace_result = preg_replace("/$searchword/", $replaceword, $meta_list);
+//      $replace_result2 = preg_replace("/$searchword/", $replaceword, $meta_description);
+//      $replace_result3 = preg_replace("/$searchword/", $replaceword, $meta_abstract);
+//      $replace_result4 = preg_replace("/$searchword/", $replaceword, $meta_keywords);
+//    }
+//  }
   $context['results']['replaced']['title'][] = $replace_result;
   $context['results']['replaced']['description'][] = $replace_result2;
   $context['results']['replaced']['abstract'][] = $replace_result3;
