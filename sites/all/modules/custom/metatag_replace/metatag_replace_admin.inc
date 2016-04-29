@@ -306,34 +306,24 @@ function metatag_replace_start_batch_search($values, &$context) {
       preg_match($search_string, $meta_abstract, $matches2);
       preg_match($search_string, $meta_keywords, $matches3);
       if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
-        $context['results']['nide']['child']=array();
+        $context['results']['matches'][$meta_nid]=array();
+        $context['results'][$meta_nid]['nid']=array();
+        $context['results'][$meta_nid]['node_title']=array();
         if (!empty($matches)) {
-          $context['results']['matches']['title'][] = $meta_title;
-        }
-        else {
-          $context['results']['matches']['title'][] = "";
+          $context['results']['matches'][$meta_nid]['title'][] = $meta_title;
         }
         if (!empty($matches1)) {
-          $context['results']['matches']['description'][] = $meta_description;
-        }
-        else {
-          $context['results']['matches']['description'][] = "";
+          $context['results']['matches'][$meta_nid]['description'][] = $meta_description;
         }
         if (!empty($matches2)) {
-          $context['results']['matches']['abstract'][] = $meta_abstract;
-        }
-        else {
-          $context['results']['matches']['abstract'][] = "";
+          $context['results']['matches'][$meta_nid]['abstract'][] = $meta_abstract;
         }
         if (!empty($matches3)) {
-          $context['results']['matches']['keywords'][] = $meta_keywords;
+          $context['results']['matches'][$meta_nid]['keywords'][] = $meta_keywords;
         }
-        else {
-          $context['results']['matches']['keywords'][] = "";
-        }
-        $context['results']['nid'][] = $meta_nid;
-        $context['results']['node_title'][] = $node_title;
-        $context['results']['node_link'][]=l($node_title, 'node/' .$meta_nid);
+        $context['results'][$meta_nid]['nid'][] = $meta_nid;
+        $context['results'][$meta_nid]['node_title'][] = $node_title;
+        $context['results'][$meta_nid]['node_link'][]=l($node_title, 'node/' .$meta_nid);
       }
     }
   }
@@ -350,19 +340,14 @@ $context['message'] = t("Matching the Meta Tags");
  */
 function metatag_replace_finish_batch_search($success, $results, $operations) {
   if ($success) {
-    print("inc<pre>");
-    print_r($results);
-    print("</pre>");
-    
-   // die;
     $_SESSION['metatag_replace_result_of_search'] = $results;
     $opn = $results['opn'];
     $searchword = $results['search-word'];
     $replaceword = $results['replace-word'];
     $count = 0;
     $flag = TRUE;
-    if (!empty($results['nid'])) {
-      $count = count($results['nid']);
+    if (!empty($results['matches'])) {
+      $count = count($results['matches']);
     }
     if ($count == 0) {
       drupal_set_message(t("No Matches Found"));
