@@ -22,12 +22,12 @@ if(isset($list[0]['nid']))
 $meta_field = $list[0]['field_result'];
 $title = t('Metatag Replace Result for Replace');
 $type = 'ol';
+$attributes = array(
+    'id' => 'metatag-replace-result-replace',
+    'class' => 'metatag-replace-result',
+  );
 
 if ($meta_field != 'all') {
-  $attributes = array(
-    'id' => 'metatag-replace-results-replace-single',
-    'class' => "metatag-replace-$meta_field-replace",
-  );
   $replace_meta_list = $list[0]['replaced'];
   $replace_nid = $list[0]['nid'];
   $replace_node_title = $list[0]['node_title'];
@@ -50,10 +50,6 @@ if ($meta_field != 'all') {
       );
 }
 else {
-  $attributes = array(
-    'id' => 'metatag-replace-results-replace-all',
-    'class' => "metatag-replace-all-replace",
-  );
   $replace_nid = $list[0]['nid'];
   $replace_node_title = $list[0]['node_title'];
   $replace_meta_title = $list[0]['replaced']['title'];

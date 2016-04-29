@@ -285,12 +285,13 @@ function metatag_replace_start_batch_search($values, &$context) {
     if ($_SESSION['metatag_replace_field_result'] != 'all') {
       $match_field = $node->metatags[$node->language][$meta_field]['value'];
       $context['message'] = t("Meta $meta_field is working...");
-      $context['results']['field_result'] = "$meta_field";
+      $context['results']['field_result'] = $meta_field;
       preg_match($search_string, $match_field, $matches);
       if (!empty($matches)) {
         $context['results']['matches'][] = $match_field;
         $context['results']['nid'][] = $meta_nid;
         $context['results']['node_title'][] = $node_title;
+        $context['results']['node_link'][]=l($node_title, 'node/' .$meta_nid);
       }
     }
     elseif ($_SESSION['metatag_replace_field_result'] == 'all') {
@@ -305,6 +306,7 @@ function metatag_replace_start_batch_search($values, &$context) {
       preg_match($search_string, $meta_abstract, $matches2);
       preg_match($search_string, $meta_keywords, $matches3);
       if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
+        $context['results']['nide']['child']=array();
         if (!empty($matches)) {
           $context['results']['matches']['title'][] = $meta_title;
         }
@@ -331,6 +333,7 @@ function metatag_replace_start_batch_search($values, &$context) {
         }
         $context['results']['nid'][] = $meta_nid;
         $context['results']['node_title'][] = $node_title;
+        $context['results']['node_link'][]=l($node_title, 'node/' .$meta_nid);
       }
     }
   }
@@ -347,7 +350,11 @@ $context['message'] = t("Matching the Meta Tags");
  */
 function metatag_replace_finish_batch_search($success, $results, $operations) {
   if ($success) {
-
+    print("inc<pre>");
+    print_r($results);
+    print("</pre>");
+    
+   // die;
     $_SESSION['metatag_replace_result_of_search'] = $results;
     $opn = $results['opn'];
     $searchword = $results['search-word'];
@@ -477,22 +484,6 @@ function metatag_replace_start_batch_replace_single($node_title, $nid, $meta_lis
   $replaceword = $_SESSION['metatag_replace_word_replace'];
   $search_string="/".$_SESSION['metatag_replace_case'].$searchword.$_SESSION['metatag_replace_case']."/".$_SESSION['metatag_replace_case'];
   $replace_result = preg_replace($search_string, $replaceword, $meta_list);
-//  if ($_SESSION['metatag_replace_match'] == '1') {
-//    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-//      $replace_result = preg_replace("/\b$searchword\b/i", $replaceword, $meta_list);
-//    }
-//    else {
-//      $replace_result = preg_replace("/\b$searchword\b/", $replaceword, $meta_list);
-//    }
-//  }
-//  else {
-//    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-//      $replace_result = preg_replace("/$searchword/i", $replaceword, $meta_list);
-//    }
-//    else {
-//      $replace_result = preg_replace("/$searchword/", $replaceword, $meta_list);
-//    }
-//  }
   $context['results']['replaced'][] = $replace_result;
   $context['results']['nid'][] = $nid;
   $context['results']['node_title'][] = $node_title;
@@ -525,36 +516,6 @@ function metatag_replace_start_batch_replace_all($node_title, $nid, $meta_list, 
   $replace_result2 = preg_replace($search_string, $replaceword, $meta_description);
   $replace_result3 = preg_replace($search_string, $replaceword, $meta_abstract);
   $replace_result4 = preg_replace($search_string, $replaceword, $meta_keywords);
-      
-//  if ($_SESSION['metatag_replace_match'] == '1') {
-//    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-//      
-//      $replace_result = preg_replace("/\b$searchword\b/i", $replaceword, $meta_list);
-//      $replace_result2 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_description);
-//      $replace_result3 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_abstract);
-//      $replace_result4 = preg_replace("/\b$searchword\b/i", $replaceword, $meta_keywords);
-//    }
-//    else {
-//      $replace_result = preg_replace("/\b$searchword\b/", $replaceword, $meta_list);
-//      $replace_result2 = preg_replace("/\b$searchword\b/", $replaceword, $meta_description);
-//      $replace_result3 = preg_replace("/\b$searchword\b/", $replaceword, $meta_abstract);
-//      $replace_result4 = preg_replace("/\b$searchword\b/", $replaceword, $meta_keywords);
-//    }
-//  }
-//  else {
-//    if ($_SESSION['metatag_replace_case'] == 'insensitive') {
-//      $replace_result = preg_replace("/$searchword/i", $replaceword, $meta_list);
-//      $replace_result2 = preg_replace("/$searchword/i", $replaceword, $meta_description);
-//      $replace_result3 = preg_replace("/$searchword/i", $replaceword, $meta_abstract);
-//      $replace_result4 = preg_replace("/$searchword/i", $replaceword, $meta_keywords);
-//    }
-//    else {
-//      $replace_result = preg_replace("/$searchword/", $replaceword, $meta_list);
-//      $replace_result2 = preg_replace("/$searchword/", $replaceword, $meta_description);
-//      $replace_result3 = preg_replace("/$searchword/", $replaceword, $meta_abstract);
-//      $replace_result4 = preg_replace("/$searchword/", $replaceword, $meta_keywords);
-//    }
-//  }
   $context['results']['replaced']['title'][] = $replace_result;
   $context['results']['replaced']['description'][] = $replace_result2;
   $context['results']['replaced']['abstract'][] = $replace_result3;
