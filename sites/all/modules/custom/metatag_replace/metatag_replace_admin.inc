@@ -307,8 +307,6 @@ function metatag_replace_start_batch_search($values, &$context) {
       preg_match($search_string, $meta_keywords, $matches3);
       if (!empty($matches) || !empty($matches1) || !empty($matches2) || !empty($matches3)) {
         $context['results']['matches'][$meta_nid]=array();
-        $context['results'][$meta_nid]['nid']=array();
-        $context['results'][$meta_nid]['node_title']=array();
         if (!empty($matches)) {
           $context['results']['matches'][$meta_nid]['title'][] = $meta_title;
         }
@@ -321,9 +319,8 @@ function metatag_replace_start_batch_search($values, &$context) {
         if (!empty($matches3)) {
           $context['results']['matches'][$meta_nid]['keywords'][] = $meta_keywords;
         }
-        $context['results'][$meta_nid]['nid'][] = $meta_nid;
-        $context['results'][$meta_nid]['node_title'][] = $node_title;
-        $context['results'][$meta_nid]['node_link'][]=l($node_title, 'node/' .$meta_nid);
+        $context['results']['detail'][$meta_nid]['nid'][] = $meta_nid;
+        $context['results']['detail'][$meta_nid]['node_link'][]=l($node_title, 'node/' .$meta_nid);
       }
     }
   }
@@ -423,33 +420,28 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
     $replace_list = $_SESSION['metatag_replace_result_of_search']['matches'];
     $nid_replace = $_SESSION['metatag_replace_result_of_search']['nid'];
     $node_replace_title = $_SESSION['metatag_replace_result_of_search']['node_title'];
-    foreach ($node_replace_title as $keys => $values) {
+    $node_replace_link = $_SESSION['metatag_replace_result_of_search']['node_link'];
+    foreach ($node_replace_link as $keys => $values) {
       $batch1['operations'][] = array('metatag_replace_start_batch_replace_single', array(
         $values,
         $nid_replace[$keys],
         $replace_list[$keys],
+        
       ),
       );
     }
   }
   else {
-    $node_replace_title = $_SESSION['metatag_replace_result_of_search']['node_title'];
-    $nid_replace = $_SESSION['metatag_replace_result_of_search']['nid'];
-    $replace_list_title = $_SESSION['metatag_replace_result_of_search']['matches']['title'];
-    $replace_list_description = $_SESSION['metatag_replace_result_of_search']['matches']['description'];
-    $replace_list_abstract = $_SESSION['metatag_replace_result_of_search']['matches']['abstract'];
-    $replace_list_keywords = $_SESSION['metatag_replace_result_of_search']['matches']['keywords'];
-    foreach ($node_replace_title as $keys => $values) {
-      $batch1['operations'][] = array('metatag_replace_start_batch_replace_all', array(
-        $values,
-        $nid_replace[$keys],
-        $replace_list_title[$keys],
-        $replace_list_description[$keys],
-        $replace_list_abstract[$keys],
-        $replace_list_keywords[$keys],
-      ),
-      );
-    }
+     $replace_list = $_SESSION['metatag_replace_result_of_search']['matches'];
+     $replace_detail = $_SESSION['metatag_replace_result_of_search']['detail']; 
+     foreach ($replace_list as $keys =>$values)
+     {
+        $batch1['operations'][] = array('metatag_replace_start_batch_replace_all', array(
+         $values,
+         $replace_detail[$keys],
+         ),
+         );
+     }
   }
   batch_set($batch1);
   batch_process('admin/config/search/metatags/replace/');
@@ -464,14 +456,14 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
  * $meta_list => Stores the meta Field for the node.
  * $context => Stores context information about the execution.
  */
-function metatag_replace_start_batch_replace_single($node_title, $nid, $meta_list, &$context) {
+function metatag_replace_start_batch_replace_single($node_link, $nid, $meta_list, &$context) {
   $searchword = $_SESSION['metatag_replace_word_search'];
   $replaceword = $_SESSION['metatag_replace_word_replace'];
   $search_string="/".$_SESSION['metatag_replace_case'].$searchword.$_SESSION['metatag_replace_case']."/".$_SESSION['metatag_replace_case'];
   $replace_result = preg_replace($search_string, $replaceword, $meta_list);
   $context['results']['replaced'][] = $replace_result;
   $context['results']['nid'][] = $nid;
-  $context['results']['node_title'][] = $node_title;
+  $context['results']['node_link'][] = $node_link;
   $context['results']['opn'] = "complete";
   $context['results']['field_result'] = $_SESSION['metatag_replace_field_result'];
   $node = node_load($nid);
@@ -493,34 +485,40 @@ function metatag_replace_start_batch_replace_single($node_title, $nid, $meta_lis
  * $meta_keywords => Stores the meta keywords for operayions.
  * $context => Stores context information about the execution.
  */
-function metatag_replace_start_batch_replace_all($node_title, $nid, $meta_list, $meta_description, $meta_abstract, $meta_keywords, &$context) {
+function metatag_replace_start_batch_replace_all($meta_list,$meta_detail,&$context) {
   $searchword = $_SESSION['metatag_replace_word_search'];
   $replaceword = $_SESSION['metatag_replace_word_replace'];
   $search_string="/".$_SESSION['metatag_replace_case'].$searchword.$_SESSION['metatag_replace_case']."/".$_SESSION['metatag_replace_case'];
-  $replace_result = preg_replace($search_string, $replaceword, $meta_list);
-  $replace_result2 = preg_replace($search_string, $replaceword, $meta_description);
-  $replace_result3 = preg_replace($search_string, $replaceword, $meta_abstract);
-  $replace_result4 = preg_replace($search_string, $replaceword, $meta_keywords);
-  $context['results']['replaced']['title'][] = $replace_result;
-  $context['results']['replaced']['description'][] = $replace_result2;
-  $context['results']['replaced']['abstract'][] = $replace_result3;
-  $context['results']['replaced']['keywords'][] = $replace_result4;
+  $nid=$meta_detail['nid'][0];
+  $node_link=$meta_detail['node_link'][0];
+  $meta_title=$meta_list['title'];
+  $meta_description=$meta_list['description'];
+  $meta_abstract=$meta_list['abstract'];
+  $meta_keywords=$meta_list['keywords'];
+  $replace_result_title = preg_replace($search_string, $replaceword, $meta_title);
+  $replace_result_description = preg_replace($search_string, $replaceword, $meta_description);
+  $replace_result_abstract = preg_replace($search_string, $replaceword, $meta_abstract);
+  $replace_result_keywords = preg_replace($search_string, $replaceword, $meta_keywords);
   $context['results']['nid'][] = $nid;
-  $context['results']['node_title'][] = $node_title;
+  $context['results']['node_link'] = $node_link;
   $context['results']['opn'] = "complete";
   $context['results']['field_result'] = $_SESSION['metatag_replace_field_result'];
+  $context['results']['replaced']['title'][] = $replace_result_title[0];
+  $context['results']['replaced']['description'][] = $replace_result_description[0];
+  $context['results']['replaced']['abstract'][] = $replace_result_abstract[0];
+  $context['results']['replaced']['keywords'][] = $replace_result_keywords[0];
   $node = node_load($nid);
-  if ($replace_result != "") {
-    $node->metatags[$node->language]['title']['value'] = $replace_result;
+  if ($replace_result_title != "") {
+    $node->metatags[$node->language]['title']['value'] = $replace_result_title[0];
   }
-  if ($replace_result2 != "") {
-    $node->metatags[$node->language]['description']['value'] = $replace_result2;
+  if ($replace_result_description != "") {
+    $node->metatags[$node->language]['description']['value'] = $replace_result_description[0];
   }
-  if ($replace_result3 != "") {
-    $node->metatags[$node->language]['abstract']['value'] = $replace_result3;
+  if ($replace_result_abstract != "") {
+    $node->metatags[$node->language]['abstract']['value'] = $replace_result_abstract[0];
   }
-  if ($replace_result4 != "") {
-    $node->metatags[$node->language]['keywords']['value'] = $replace_result4;
+  if ($replace_result_keywords != "") {
+    $node->metatags[$node->language]['keywords']['value'] = $replace_result_keywords[0];
   }
   $node->revision = 1;
   $node->log = "Modified by Meta tag replace module Replaced $searchword with $replaceword";
@@ -537,9 +535,13 @@ function metatag_replace_start_batch_replace_all($node_title, $nid, $meta_list, 
  */
 function metatag_replace_batch_fix_finished($success, $results, $operations) {
   if ($success) {
+      print("replace <pre>");
+      print_r($results);
+      print("</pre>");
+      die;
     $searchword = $_SESSION['metatag_replace_word_search'];
     $replaceword = $_SESSION['metatag_replace_word_replace'];
-    $count=count($results[nid]);
+    $count=count($results['nid']);
     $_SESSION['metatag_replace_result_of_replace'] = $results;
     drupal_set_message(t("Replaced %count occurences of $searchword in pages with $replaceword",array('%count' => $count)), 'status');
 

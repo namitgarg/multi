@@ -26,28 +26,17 @@ $attributes = array(
     'id' => 'metatag-replace-result-replace',
     'class' => 'metatag-replace-result',
   );
-
 if ($meta_field != 'all') {
   $replace_meta_list = $list[0]['replaced'];
-  $replace_nid = $list[0]['nid'];
-  $replace_node_title = $list[0]['node_title'];
-  foreach ($replace_node_title as $keys => $values) {
+  $replace_node_link = $list[0]['node_link'];
+  foreach ($replace_node_link as $keys => $values) {
     $items[] = array(
-      'data' => l($values, 'node/' . $replace_nid[$keys]),
-      'id' => $replace_nid[$keys],
-      'type' => 'ul',
+      'data' => $values,
       'children' => array(
         'data' => "Meta $meta_field : $replace_meta_list[$keys]",
       ),
     );
   }
-  print theme('item_list', array(
-    'items' => $items,
-    'title' => $title,
-    'type' => $type,
-    'attributes' => $attributes,
-  )
-      );
 }
 else {
   $replace_nid = $list[0]['nid'];
@@ -76,13 +65,13 @@ else {
       'children' => $children,
     );
   }
-   print theme('item_list', array(
+}
+  print theme('item_list', array(
      'items' => $items,
      'title' => $title,
      'type' => $type,
      'attributes' => $attributes,
    )
       );
-}
 }
 ?>
