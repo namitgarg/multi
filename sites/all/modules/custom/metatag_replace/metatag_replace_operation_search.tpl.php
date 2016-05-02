@@ -10,18 +10,10 @@
  * $list[0]['search-word']=> Stores the search word.
  * $list[0]['replace-word']=> Stores the replace word.
  * $list[0]['opn']=> Stores operation performed ie Search,Replace,Complete.
- * $list[0]['field_result']=> Stores the Meta field Selected.
- * $list[0]['nid'] => Stores the Nid of the Node.
- * $list[0][node_link']=> Stores The link to the Node.
- * $list[0][matches]=> Stores the Result for individual field.
- * $list[0]['matches']['title'] => Stores the Meta Title.
- * $list[0]['matches']['description'] => Stores the Meta Description.
- * $list[0]['matches']['abstract'] => Stores the Meta Abstract.
- * $list[0]['matches']['keywords'] => Stores the Meta Keywords.
+ * $list[0]['field_result']=> Stores the Meta field you searched.
+ * $list[0]['detail'] => Stores the nid and link of the Node.
+ * $list[0][matches]=> Stores the the array for Metatags found.
  */
-//print("template <pre>");
-//print_r($list[0]);
-//print("</pre>");
 if(isset($list[0]['matches']))
  {
   $meta_field = $list[0]['field_result'];
@@ -33,7 +25,7 @@ if(isset($list[0]['matches']))
   );
   if ($meta_field != 'all') {
     $search_meta_list = $list[0]['matches'];
-    $search_node_link = $list[0]['node_link'];
+    $search_node_link = $list[0]['detail']['node_link'];
     foreach ($search_node_link as $keys => $values) {
       $items[] = array(
         'data' => $values,
@@ -45,7 +37,7 @@ if(isset($list[0]['matches']))
   }
   else {
     foreach ($list[0]['matches'] as $keys => $values) {
-      $items[] = array(
+     $items[] = array(
         'data' => $list[0]['detail'][$keys]['node_link'][0],
         'children' => $values,
       );

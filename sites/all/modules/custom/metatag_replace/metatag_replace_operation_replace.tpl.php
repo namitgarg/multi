@@ -17,61 +17,40 @@
  * $list[0]['replaced']['abstract'] => Stores the Meta Abstract.
  * $list[0]['matches']['keywords'] => Stores the Meta Keywords.
  */
-if(isset($list[0]['nid']))
-{
-$meta_field = $list[0]['field_result'];
-$title = t('Metatag Replace Result for Replace');
-$type = 'ol';
-$attributes = array(
-    'id' => 'metatag-replace-result-replace',
-    'class' => 'metatag-replace-result',
-  );
-if ($meta_field != 'all') {
-  $replace_meta_list = $list[0]['replaced'];
-  $replace_node_link = $list[0]['node_link'];
-  foreach ($replace_node_link as $keys => $values) {
-    $items[] = array(
-      'data' => $values,
-      'children' => array(
-        'data' => "Meta $meta_field : $replace_meta_list[$keys]",
-      ),
+if (isset($list[0]['detail'])) {
+    $meta_field = $list[0]['field_result'];
+    $title = t('Metatag Replace Result for Replace');
+    $type = 'ol';
+    $attributes = array(
+      'id' => 'metatag-replace-result-replace',
+      'class' => 'metatag-replace-result',
     );
-  }
-}
-else {
-  $replace_nid = $list[0]['nid'];
-  $replace_node_title = $list[0]['node_title'];
-  $replace_meta_title = $list[0]['replaced']['title'];
-  $replace_meta_description = $list[0]['replaced']['description'];
-  $replace_meta_abstract = $list[0]['replaced']['abstract'];
-  $replace_meta_keywords = $list[0]['replaced']['keywords'];
-  foreach ($replace_node_title as $keys => $values) {
-    $children = array();
-    if (!empty($replace_meta_title[$keys])) {
-      $children[] = "Meta Title : $replace_meta_title[$keys]";
+    if ($meta_field != 'all') {
+        $replace_meta_list = $list[0]['replace'];
+        $replace_node_link = $list[0]['detail']['node_link'];
+        foreach ($replace_node_link as $keys => $values) {
+            $items[] = array(
+              'data' => $values,
+              'children' => array(
+                'data' => "Meta $meta_field : $replace_meta_list[$keys]",
+              ),
+            );
+        }
     }
-    if (!empty($replace_meta_description[$keys])) {
-      $children[] = "Meta Description : $replace_meta_description[$keys]";
+    else {
+        foreach ($list[0]['replace'] as $keys => $values) {
+            $items[] = array(
+              'data' => $list[0]['detail'][$keys]['node_link'],
+              'children' => $values,
+            );
+        }
     }
-    if (!empty($replace_meta_abstract[$keys])) {
-      $children[] = "Meta Description : $replace_meta_abstract[$keys]";
-    }
-    if (!empty($replace_meta_keywords[$keys])) {
-      $children[] = "Meta Description : $replace_meta_keywords[$keys]";
-    }
-    $items[] = array(
-      'data' => l($values, 'node/' . $replace_nid[$keys]),
-      'id' => $replace_nid[$keys],
-      'children' => $children,
+    print theme('item_list', array(
+      'items' => $items,
+      'title' => $title,
+      'type' => $type,
+      'attributes' => $attributes,
+            )
     );
-  }
-}
-  print theme('item_list', array(
-     'items' => $items,
-     'title' => $title,
-     'type' => $type,
-     'attributes' => $attributes,
-   )
-      );
 }
 ?>
