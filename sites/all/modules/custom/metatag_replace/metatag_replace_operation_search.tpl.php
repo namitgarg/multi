@@ -38,9 +38,9 @@ if(isset($list[0]['matches']))
   else {
     foreach ($list[0]['matches'] as $keys => $values) {
      $items[] = array(
-        'data' => $list[0]['detail'][$keys]['node_link'][0],
-        'children' => $values,
-      );
+       'data' => $list[0]['detail'][$keys]['node_link'][0],
+       'children' => $values,
+     );
     }
   }
     print theme('item_list', array(
@@ -48,7 +48,7 @@ if(isset($list[0]['matches']))
       'title' => $title,
       'type' => $type,
       'attributes' => $attributes,
-            )
+    )
     );
 }
 ?>

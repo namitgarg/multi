@@ -9,13 +9,9 @@
  * $list[0] Stores the Following Data
  * $list[0]['opn']=> Stores operation state.
  * $list[0]['field_result']=> Stores the Meta field Selected.
- * $list[0]['nid'] => Stores the Nid of the Node.
- * $list[0][node_title']=> Stores The Node Title of the Node.
- * $list[0]['replaced] => Stores the Replace result for individual field.
- * $list[0]['replaced']['title'] => Stores the Meta Title.
- * $list[0]['replaced']['description']=> Stores the Meta Description.
- * $list[0]['replaced']['abstract'] => Stores the Meta Abstract.
- * $list[0]['matches']['keywords'] => Stores the Meta Keywords.
+ * $list[0]['detail']=> Stores the link to  the Node.
+ * $list[0]['replace] => Stores the replaced tags.
+
  */
 if (isset($list[0]['detail'])) {
     $meta_field = $list[0]['field_result'];
@@ -50,7 +46,7 @@ if (isset($list[0]['detail'])) {
       'title' => $title,
       'type' => $type,
       'attributes' => $attributes,
-            )
+    )
     );
 }
 ?>

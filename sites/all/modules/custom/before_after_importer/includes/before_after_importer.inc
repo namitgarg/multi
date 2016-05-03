@@ -93,7 +93,7 @@ function before_after_importer_form_submit($form, &$form_state) {
     $node_data_string = trim($nodedata[0]);
     // This function will contain code for node creation.
     if (!empty($node_data_string) && isset($node_data_string)) {
-      $operations[] = array('before_after_create_nodes', array($nodedata));
+      $operations[] = array('before_after_create_nodes', array($nodedata,$label));
     }
   }
 
@@ -118,7 +118,7 @@ function before_after_importer_form_submit($form, &$form_state) {
  * Function :: before_after_create_nodes
  * @param type $nodedata
  */
-function before_after_create_nodes($nodedata, &$context) {
+function before_after_create_nodes($nodedata,$field_name,&$context) {
   /*
    *  Programatically Node Creation TYPE :: Gallery .... (Before and After Gallery Entry)
    */
@@ -131,7 +131,6 @@ function before_after_create_nodes($nodedata, &$context) {
   /*
    * Setting data for title field
    */
-
   if (isset($nodedata[0]) && !empty($nodedata[0]))
     $node->title = trim($nodedata[0]);
   else
@@ -181,46 +180,59 @@ function before_after_create_nodes($nodedata, &$context) {
     }
   }
 
-// Code for Image Uploading section 
-  if (isset($nodedata[3]) && !empty($nodedata[3])) {
-
-    $images = explode(',', $nodedata[3]);
-    $k = 1;
-    foreach ($images as $imgkey => $imagechunk) {
-
-      $before_after_img_combined = trim($imagechunk);
-
-
-      //   preg_match_all("/\[([^\]]*)\]/", $before_after_img_combined, $matches);
-
-      $___input = $before_after_img_combined;
-      $___output = substr($___input, 1, -1);
-
-      if (isset($___output) && !empty($___output)) {
-        $CorretImage = $___output;
-        $CorrectImageInArray = explode('|', $CorretImage);
-
-        $before_img = $CorrectImageInArray[0];
-        $after_img = $CorrectImageInArray[1];
-
-        // Action for before image 
-        if (isset($before_img) && !empty($before_img)) {
-          $beforeFileObject = saving_before_after_image_programatically($before_img);
-          $before_image_dynamic_variable = BEFORE_IMAGE_PREFIX . $k;
-          $node->{$before_image_dynamic_variable}[LANGUAGE_NONE][0] = (array) $beforeFileObject;
-        }
-
-        // Action for after image 
-        if (isset($after_img) && !empty($after_img)) {
-          $afterFileObject = saving_before_after_image_programatically($after_img);
-          $after_image_dynamic_variable = AFTER_IMAGE_PREFIX . $k;
-          $node->{$after_image_dynamic_variable}[LANGUAGE_NONE][0] = (array) $afterFileObject;
-        }
-      }
-
-      $k++;
+  //code ny namit
+  foreach($field_name as $keys=>$values)
+    if($keys !=0 && $keys!=1 && $keys!=2)
+    {
+     if (isset($nodedata[$keys]) && !empty($nodedata[$keys])) {
+       $context['results'][$keys]=$nodedata[$keys];
+              // $beforeFileObject = saving_before_after_image_programatically($nodedata[$keys]);
+              // $node->$values['und'][][0] = (array) $beforeFileObject;
+       
+       
+     }
     }
-  }
+  
+  
+// Code for Image Uploading section 
+//  if (isset($nodedata[3]) && !empty($nodedata[3])) {
+//
+//    $field
+////    foreach ($images as $imgkey => $imagechunk) {
+////
+////      $before_after_img_combined = trim($imagechunk);
+////
+////
+////      //   preg_match_all("/\[([^\]]*)\]/", $before_after_img_combined, $matches);
+////
+////      $___input = $before_after_img_combined;
+////      $___output = substr($___input, 1, -1);
+////
+////      if (isset($___output) && !empty($___output)) {
+////        $CorretImage = $___output;
+////        $CorrectImageInArray = explode('|', $CorretImage);
+////
+////        $before_img = $CorrectImageInArray[0];
+////        $after_img = $CorrectImageInArray[1];
+////
+////        // Action for before image 
+////        if (isset($before_img) && !empty($before_img)) {
+////          $beforeFileObject = saving_before_after_image_programatically($before_img);
+////          $before_image_dynamic_variable = BEFORE_IMAGE_PREFIX . $k;
+////          $node->{$before_image_dynamic_variable}[LANGUAGE_NONE][0] = (array) $beforeFileObject;
+////        }
+////
+////        // Action for after image 
+////        if (isset($after_img) && !empty($after_img)) {
+////          $afterFileObject = saving_before_after_image_programatically($after_img);
+////          $after_image_dynamic_variable = AFTER_IMAGE_PREFIX . $k;
+////          $node->{$after_image_dynamic_variable}[LANGUAGE_NONE][0] = (array) $afterFileObject;
+////        }
+////      }
+////
+////      $k++;
+////    }
+//  }
 
 // End code for image upload section 
 
@@ -254,7 +266,8 @@ function before_after_create_nodes($nodedata, &$context) {
  * @param type $operations 
  */
 function before_after_batch_finished($success, $results, $operations) {
-
+print_r($results);
+die;
   if ($success) {
     drupal_set_message(t('Before and After Gallery Entry imported Successfully.'));
   }
