@@ -179,61 +179,61 @@ function before_after_create_nodes($nodedata,$field_name,&$context) {
       }
     }
   }
+  global $user_id;
 
   //code ny namit
   foreach($field_name as $keys=>$values)
     if($keys !=0 && $keys!=1 && $keys!=2)
     {
      if (isset($nodedata[$keys]) && !empty($nodedata[$keys])) {
-       $context['results'][$keys]=$nodedata[$keys];
-              // $beforeFileObject = saving_before_after_image_programatically($nodedata[$keys]);
-              // $node->$values['und'][][0] = (array) $beforeFileObject;
+       $filename=$nodedata[$keys];
+       $pathfile = $base_url . '/' . DIRECTORY_PATH_WHERE_FILES_PICKED;
+       $path = $pathfile.$filename;
+       $path = str_replace(' ', '%20', $path);
+       $image = file_get_contents($path);
+       $destination = 'public://' . $filename;
+       $file = file_save_data($image, 'public://' . $filename, FILE_EXISTS_RENAME);
+       $file->uid = 1;
+       $file->status = 1;
+       //$node->field_before_image_1['und'][0] = (array)$file;
        
-       
-     }
+//      
+//     $file = (object) array(
+//              'uid' => 1,
+//              'uri' => $path,
+//              'filemime' => file_get_mimetype($path),
+//              'status' => 1,
+//        );
+          $context['results']['image'][$keys][]=$file;
+    // $file = file_copy($file, 'public://');
+ 
+$node->field_before_image_1['und'][0] = (array)$file;
+$node->field_before_image_1['und'][0]->fid = $file->fid;
+      }
     }
-  
-  
-// Code for Image Uploading section 
-//  if (isset($nodedata[3]) && !empty($nodedata[3])) {
-//
-//    $field
-////    foreach ($images as $imgkey => $imagechunk) {
-////
-////      $before_after_img_combined = trim($imagechunk);
-////
-////
-////      //   preg_match_all("/\[([^\]]*)\]/", $before_after_img_combined, $matches);
-////
-////      $___input = $before_after_img_combined;
-////      $___output = substr($___input, 1, -1);
-////
-////      if (isset($___output) && !empty($___output)) {
-////        $CorretImage = $___output;
-////        $CorrectImageInArray = explode('|', $CorretImage);
-////
-////        $before_img = $CorrectImageInArray[0];
-////        $after_img = $CorrectImageInArray[1];
-////
-////        // Action for before image 
-////        if (isset($before_img) && !empty($before_img)) {
-////          $beforeFileObject = saving_before_after_image_programatically($before_img);
-////          $before_image_dynamic_variable = BEFORE_IMAGE_PREFIX . $k;
-////          $node->{$before_image_dynamic_variable}[LANGUAGE_NONE][0] = (array) $beforeFileObject;
-////        }
-////
-////        // Action for after image 
-////        if (isset($after_img) && !empty($after_img)) {
-////          $afterFileObject = saving_before_after_image_programatically($after_img);
-////          $after_image_dynamic_variable = AFTER_IMAGE_PREFIX . $k;
-////          $node->{$after_image_dynamic_variable}[LANGUAGE_NONE][0] = (array) $afterFileObject;
-////        }
-////      }
-////
-////      $k++;
-////    }
-//  }
-
+  /*
+   * global $user_id;
+$filename = 'myimage.jpg';
+$image_object = file_get_contents('url_of_your_image);
+$file = file_save_data($image_object, 'public://' . $filename, FILE_EXISTS_RENAME);
+$file->uid = $user->uid;
+$node->field_my_image[$node->language][0] = (array)$file;
+node_save($node);
+//If you want to save and existing image from drupal directory
+$filepath = drupal_realpath('misc/druplicon.png');
+// Create managed File object and associate with Image field.
+$file = (object) array(
+'uid' => 1,
+'uri' => $filepath,
+'filemime' => file_get_mimetype($filepath),
+'status' => 1,
+);
+// We save the file to the root of the files directory.
+$file = file_copy($file, 'public://');
+$node->field_my_image[$node->language][0] = (array)$file;
+node_save($node);
+- See more at: http://findnerd.com/list/view/Attaching-image-files-to-nodes-programmatically-in-Drupal-7/6592/#sthash.bDGVVQjQ.dpuf
+   */
 // End code for image upload section 
 
   $node->status = 1;
@@ -266,9 +266,10 @@ function before_after_create_nodes($nodedata,$field_name,&$context) {
  * @param type $operations 
  */
 function before_after_batch_finished($success, $results, $operations) {
-print_r($results);
-die;
   if ($success) {
+    print("<pre>");
+    print_r($results);
+    die;
     drupal_set_message(t('Before and After Gallery Entry imported Successfully.'));
   }
   else {
@@ -300,27 +301,6 @@ function __load_taxonomy_by_name($term) {
   else {
     return create_taxonomy_term_by_vocabulary_machine_name($term);
   }
-}
-
-/**
- * Function ::  saving_before_after_image_programatically
- * @param type $filename Object
- */
-function saving_before_after_image_programatically($filename) {
-
-  global $base_url;
-  $pathfile = $base_url . '/' . DIRECTORY_PATH_WHERE_FILES_PICKED;
-  $fileRealName = $filename;
-  $path = $pathfile . $fileRealName;
-  $path = str_replace(' ', '%20', $path);
-  $image = file_get_contents($path);
-  $destination = 'public://' . $fileRealName;
-  $file = file_save_data($image, $destination, FILE_EXISTS_REPLACE);
-  if (is_object($file)) {
-    $file->status = 1;
-    $file = file_save($file);
-  }
-  return $file;
 }
 
 /**

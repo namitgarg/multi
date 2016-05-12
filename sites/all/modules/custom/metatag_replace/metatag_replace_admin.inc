@@ -28,7 +28,7 @@ function metatag_replace_type_list() {
   $typedata = node_type_get_types();
   foreach ($typedata as $values1) {
     $type_machine_name = $values1->type;
-    $type_human_name = $values1->name;
+    $type_human_name = t($values1->name);
     $func_content_type[$type_machine_name] = $type_human_name;
   }
 
@@ -51,16 +51,16 @@ function metatag_replace_form($form, &$form_state) {
   $content_type = array_merge($default_type, $content_type);
   // List of Metatag fields.
   $field_list = array(
-    'title' => 'Title',
-    'description' => 'Description',
-    'abstract' => 'Abstract',
-    'keywords' => 'Keywords',
-    'all' => 'All Tags',
+    "title" => t("Title"),
+    "description" => t("Description"),
+    "abstract" => t("Abstract"),
+    "keywords" => t("Keywords"),
+    "all" => t("All Tags"),
   );
   // To select Case sensitivity.
   $case_list = array(
-    'sensitive' => 'Sensitive',
-    'insensitive' => 'Insensitive',
+    "sensitive" => t("Sensitive"),
+    "insensitive" => t("Insensitive"),
   );
   $session_match = FALSE;
   if (!empty($_SESSION['metatag_replace_show_result']) && $_SESSION['metatag_replace_show_result'] == 'TRUE') {
@@ -143,18 +143,17 @@ function metatag_replace_form($form, &$form_state) {
   if (!empty($_SESSION['metatag_replace_show_result']) && $_SESSION['metatag_replace_show_result'] == 'TRUE') {
     if ($_SESSION['metatag_replace_opn'] == 'complete') {
       $dispaly_result = $_SESSION['metatag_replace_result_of_replace'];
-      $template_name = 'metatag_replace_operation_replace';
+      $theme_name = 'metatag_replace_operation_replace';
     }
     elseif ($_SESSION['metatag_replace_opn'] == 'replace' || $_SESSION['metatag_replace_opn'] == 'search') {
       $dispaly_result = $_SESSION['metatag_replace_result_of_search'];
-      $template_name = 'metatag_replace_operation_search';
+      $theme_name = 'metatag_replace_operation_search';
     }
     $form['results'] = array(
       '#type' => 'markup',
-      '#markup' => theme('pager'),
-      '#theme' => $template_name,
-      '#list' => array($dispaly_result),
+     '#theme' => $theme_name,
     );
+
     $_SESSION['metatag_replace_show_result'] = FALSE;
   }
   return $form;
@@ -537,7 +536,7 @@ function metatag_replace_batch_fix_finished($success, $results, $operations) {
     drupal_set_message(t("Replaced %count occurrences of %searchword in pages with %replaceword", array(
       '%count' => $count,
       '%searchword' => $searchword,
-      'replaceword' => $replaceword,
+      '%replaceword' => $replaceword,
     )
         ),
       'status'

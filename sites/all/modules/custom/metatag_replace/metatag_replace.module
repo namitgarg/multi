@@ -71,18 +71,101 @@ function metatag_replace_menu() {
  * Implements metatag_replace_theme().
  */
 function metatag_replace_theme() {
-  return array(
+$items= array(
     'metatag_replace_operation_search' => array(
-      'variables' => array(
-        'list' => array(),
-      ),
-      'template' => 'metatag_replace_operation_search',
+     'variables' =>$_SESSION['metatag_replace_result_of_search'],
     ),
     'metatag_replace_operation_replace' => array(
-      'variables' => array(
-        'list' => array(),
-      ),
-      'template' => 'metatag_replace_operation_replace',
+     'variables' =>$_SESSION['metatag_replace_result_of_replace'],
     ),
   );
+  
+  return $items;
 }
+
+/**
+ * 
+ * @param type $result
+ * @return type
+ */
+function theme_metatag_replace_operation_search($result)
+{
+  if(!empty($result['matches']))
+ {
+  $meta_field = $result['field_result'];
+  $title = t('Metatag Replace Result for Search');
+  $type = 'ol';
+  $attributes = array(
+    'id' => 'metatag-replace-result-search',
+    'class' => 'metatag-replace-result',
+  );
+  if ($meta_field != 'all') {
+    $search_meta_list = $result['matches'];
+    $search_node_link = $result['detail']['node_link'];
+    foreach ($search_node_link as $keys => $values) {
+      $items[] = array(
+        'data' => $values,
+        'children' => array(
+          'data' => "Meta $meta_field : " . $search_meta_list[$keys],
+        ),
+      );
+    }
+  }
+  else {
+    foreach ($result['matches'] as $keys => $values) {
+     $items[] = array(
+       'data' => $result['detail'][$keys]['node_link'][0],
+       'children' => $values,
+     );
+    }
+  }
+  return theme('item_list', array(
+      'items' => $items,
+      'title' => $title,
+      'type' => $type,
+      'attributes' => $attributes,
+    )
+    );
+}
+}
+
+function theme_metatag_replace_operation_replace($result)
+{
+  if (!empty($result['detail'])) {
+    $meta_field = $result['field_result'];
+    $title = t('Metatag Replace Result for Replace');
+    $type = 'ol';
+    $attributes = array(
+      'id' => 'metatag-replace-result-replace',
+      'class' => 'metatag-replace-result',
+    );
+    if ($meta_field != 'all') {
+        $replace_meta_list = $result['replace'];
+        $replace_node_link = $result['detail']['node_link'];
+        foreach ($replace_node_link as $keys => $values) {
+            $items[] = array(
+              'data' => $values,
+              'children' => array(
+                'data' => "Meta $meta_field : $replace_meta_list[$keys]",
+              ),
+            );
+        }
+    }
+    else {
+        foreach ($result['replace'] as $keys => $values) {
+            $items[] = array(
+              'data' => $result['detail'][$keys]['node_link'],
+              'children' => $values,
+            );
+        }
+    }
+    return theme('item_list', array(
+      'items' => $items,
+      'title' => $title,
+      'type' => $type,
+      'attributes' => $attributes,
+    )
+    );
+}
+}
+
