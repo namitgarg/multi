@@ -40,6 +40,9 @@ function metatag_replace_type_list() {
  */
 function metatag_replace_form($form, &$form_state) {
   drupal_session_start();
+  print("Session variable in form<pre>");
+  print_r($_SESSION['metatag_replace_result_of_search']);
+  print("session variable ends</pre>");
   $intial_search = '';
   $default_replace = '';
   $default_case = '';

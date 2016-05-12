@@ -79,7 +79,9 @@ $items= array(
      'variables' =>$_SESSION['metatag_replace_result_of_replace'],
     ),
   );
-  
+print(" theme function<pre>");
+  print_r($_SESSION['metatag_replace_result_of_search']);
+  print("</pre>");
   return $items;
 }
 
@@ -90,6 +92,9 @@ $items= array(
  */
 function theme_metatag_replace_operation_search($result)
 {
+  print("result variables in search theme function <pre>");
+  print_r($result);
+  print("</pre>");
   if(!empty($result['matches']))
  {
   $meta_field = $result['field_result'];
