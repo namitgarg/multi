@@ -5,7 +5,7 @@
  */
 
 /**
- * Provides Search and Replace permisssions to different Roles.
+ * Implements hook_permission().
  */
 function metatag_replace_permission() {
   return array(
@@ -20,7 +20,7 @@ function metatag_replace_permission() {
   );
 }
 /**
- * Implements metatag_replace_menu for the module.
+ * Implements hook_help().
  */
 function metatag_replace_help($path, $arg) {
   switch ($path) {
@@ -42,7 +42,7 @@ function metatag_replace_help($path, $arg) {
 }
 
 /**
- * Implements metatag_replace_menu() for the module.
+ * Implements hook_menu().
  */
 function metatag_replace_menu() {
   $items['admin/config/search/metatags/replace'] = array(
@@ -68,76 +68,86 @@ function metatag_replace_menu() {
 }
 
 /**
- * Implements metatag_replace_theme().
+ * Implements hook_theme().
  */
 function metatag_replace_theme() {
-$items= array(
+  $items = array(
     'metatag_replace_operation_search' => array(
-     'variables' =>$_SESSION['metatag_replace_result_of_search'],
+      'variables' => array(
+        'list' => array(),
+      ),
     ),
     'metatag_replace_operation_replace' => array(
-     'variables' =>$_SESSION['metatag_replace_result_of_replace'],
+      'variables' => array(
+        'list' => array(),
+      ),
     ),
   );
-print(" theme function<pre>");
-  print_r($_SESSION['metatag_replace_result_of_search']);
-  print("</pre>");
   return $items;
 }
 
 /**
+ * Theme function for search operation.
  * 
- * @param type $result
- * @return type
+ * $result['list'] Stores the Following Data
+ * $result['list']['search-word']=> Stores the search word.
+ * $result['list']['replace-word']=> Stores the replace word.
+ * $result['list']['opn']=> Stores operation performed.
+ * $result['list']['field_result']=> Stores the Meta field you searched.
+ * $result['list']['detail'] => Stores the nid and link of the Node.
+ * $result['list'][matches]=> Stores the the array for Metatags found.
  */
-function theme_metatag_replace_operation_search($result)
-{
-  print("result variables in search theme function <pre>");
-  print_r($result);
-  print("</pre>");
-  if(!empty($result['matches']))
- {
-  $meta_field = $result['field_result'];
-  $title = t('Metatag Replace Result for Search');
-  $type = 'ol';
-  $attributes = array(
-    'id' => 'metatag-replace-result-search',
-    'class' => 'metatag-replace-result',
-  );
-  if ($meta_field != 'all') {
-    $search_meta_list = $result['matches'];
-    $search_node_link = $result['detail']['node_link'];
-    foreach ($search_node_link as $keys => $values) {
-      $items[] = array(
-        'data' => $values,
-        'children' => array(
-          'data' => "Meta $meta_field : " . $search_meta_list[$keys],
-        ),
-      );
+function theme_metatag_replace_operation_search($result) {
+  if (!empty($result['list']['matches'])) {
+    $meta_field = $result['list']['field_result'];
+    $title = t('Metatag Replace Result for Search');
+    $type = 'ol';
+    $attributes = array(
+      'id' => 'metatag-replace-result-search',
+      'class' => 'metatag-replace-result',
+    );
+    if ($meta_field != 'all') {
+      $search_meta_list = $result['list']['matches'];
+      $search_node_link = $result['list']['detail']['node_link'];
+      foreach ($search_node_link as $keys => $values) {
+        $items[] = array(
+          'data' => $values,
+          'children' => array(
+            'data' => "Meta $meta_field : " . $search_meta_list[$keys],
+          ),
+        );
+      }
     }
-  }
-  else {
-    foreach ($result['matches'] as $keys => $values) {
-     $items[] = array(
-       'data' => $result['detail'][$keys]['node_link'][0],
-       'children' => $values,
-     );
+    else {
+      foreach ($result['list']['matches'] as $keys => $values) {
+        $items[] = array(
+          'data' => $result['list']['detail'][$keys]['node_link'][0],
+          'children' => $values,
+        );
+      }
     }
-  }
-  return theme('item_list', array(
+    return theme('item_list', array(
       'items' => $items,
       'title' => $title,
       'type' => $type,
       'attributes' => $attributes,
-    )
+        )
     );
-}
+  }
 }
 
-function theme_metatag_replace_operation_replace($result)
-{
-  if (!empty($result['detail'])) {
-    $meta_field = $result['field_result'];
+/**
+ * Theme function for replace operation.
+ * 
+ * $result['list'] Stores the Following Data
+ * $result['list']['opn']=> Stores operation state.
+ * $result['list']['field_result']=> Stores the Meta field Selected.
+ * $result['list']['detail']=> Stores the link to  the Node.
+ * $result['list']['replace] => Stores the replaced tags.
+ */
+function theme_metatag_replace_operation_replace($result) {
+  if (!empty($result['list']['detail'])) {
+    $meta_field = $result['list']['field_result'];
     $title = t('Metatag Replace Result for Replace');
     $type = 'ol';
     $attributes = array(
@@ -145,32 +155,31 @@ function theme_metatag_replace_operation_replace($result)
       'class' => 'metatag-replace-result',
     );
     if ($meta_field != 'all') {
-        $replace_meta_list = $result['replace'];
-        $replace_node_link = $result['detail']['node_link'];
-        foreach ($replace_node_link as $keys => $values) {
-            $items[] = array(
-              'data' => $values,
-              'children' => array(
-                'data' => "Meta $meta_field : $replace_meta_list[$keys]",
-              ),
-            );
-        }
+      $replace_meta_list = $result['list']['replace'];
+      $replace_node_link = $result['list']['detail']['node_link'];
+      foreach ($replace_node_link as $keys => $values) {
+        $items[] = array(
+          'data' => $values,
+          'children' => array(
+            'data' => "Meta $meta_field : $replace_meta_list[$keys]",
+          ),
+        );
+      }
     }
     else {
-        foreach ($result['replace'] as $keys => $values) {
-            $items[] = array(
-              'data' => $result['detail'][$keys]['node_link'],
-              'children' => $values,
-            );
-        }
+      foreach ($result['list']['replace'] as $keys => $values) {
+        $items[] = array(
+          'data' => $result['list']['detail'][$keys]['node_link'],
+          'children' => $values,
+        );
+      }
     }
     return theme('item_list', array(
       'items' => $items,
       'title' => $title,
       'type' => $type,
       'attributes' => $attributes,
-    )
+        )
     );
+  }
 }
-}
-

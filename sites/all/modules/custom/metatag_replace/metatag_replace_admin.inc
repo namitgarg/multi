@@ -40,9 +40,6 @@ function metatag_replace_type_list() {
  */
 function metatag_replace_form($form, &$form_state) {
   drupal_session_start();
-  print("Session variable in form<pre>");
-  print_r($_SESSION['metatag_replace_result_of_search']);
-  print("session variable ends</pre>");
   $intial_search = '';
   $default_replace = '';
   $default_case = '';
@@ -127,13 +124,13 @@ function metatag_replace_form($form, &$form_state) {
     '#default_value' => $default_field,
     '#description' => t("Choose meta fields to be Searched"),
   );
-  $form['submit'] = array(
+  $form['search'] = array(
     '#type' => 'submit',
     '#value' => t("Search"),
     '#validate' => array('metatag_replace_form_search_validate'),
     '#submit' => array('metatag_replace_form_search_submit'),
   );
-  $form['submit1'] = array(
+  $form['replace'] = array(
     '#type' => 'submit',
     '#value' => t("Replace"),
     '#validate' => array('metatag_replace_form_replace_validate'),
@@ -154,7 +151,8 @@ function metatag_replace_form($form, &$form_state) {
     }
     $form['results'] = array(
       '#type' => 'markup',
-     '#theme' => $theme_name,
+      '#theme' => $theme_name,
+      '#list' => $dispaly_result,
     );
 
     $_SESSION['metatag_replace_show_result'] = FALSE;
@@ -246,12 +244,18 @@ function metatag_replace_search_operation($form, &$form_state, $opn) {
     $query->condition('type', ($type), 'IN');
   }
   $results = $query->execute()->fetchAll();
-  foreach ($results as $values) {
-    $batch['operations'][] = array('metatag_replace_start_batch_search', array($values->nid));
-  }
-  batch_set($batch);
+  if(empty($results))
+    drupal_set_message(t("No nodes exists for the Content type."),"status");
+  else {
+    
+    foreach ($results as $values) {
+      $batch['operations'][] = array('metatag_replace_start_batch_search', array($values->nid));
+    }
+    batch_set($batch);
   // The path to redirect when batch process is completed.
   batch_process('admin/config/search/metatags/replace');
+  }
+  
 }
 
 /**
@@ -390,7 +394,7 @@ function metatag_replace_confirm_form($form, &$form_state) {
     $form['results'] = array(
       '#type' => 'markup',
       '#theme' => 'metatag_replace_operation_search',
-      '#list' => array($_SESSION['metatag_replace_result_of_search']),
+      '#list' => $_SESSION['metatag_replace_result_of_search'],
     );
   }
   return $form;
@@ -419,7 +423,7 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
         $values,
         $nid_replace[$keys],
         $replace_list[$keys],
-      ),
+        ),
       );
     }
   }
@@ -430,7 +434,7 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
       $batch1['operations'][] = array('metatag_replace_start_batch_replace_all', array(
         $values,
         $replace_detail[$keys],
-      ),
+        ),
       );
     }
   }
@@ -512,12 +516,14 @@ function metatag_replace_start_batch_replace_all($meta_list, $meta_detail, &$con
 }
 /**
  * Helper function to perform replace on Meta tags.
+ * 
+ * $search_result => stores the result of Meta fields.
  */
-function metatag_replace_perform_replace($var1) {
+function metatag_replace_perform_replace($search_result) {
   $searchword = $_SESSION['metatag_replace_word_search'];
   $replaceword = $_SESSION['metatag_replace_word_replace'];
   $search_string = "/" . $_SESSION['metatag_replace_case'] . $searchword . $_SESSION['metatag_replace_case'] . "/" . $_SESSION['metatag_replace_case'];
-  $search_tag = explode(": ", $var1, "2");
+  $search_tag = explode(": ", $search_result, "2");
   $match_tag = $search_tag[1];
   return preg_replace($search_string, $replaceword, $match_tag);
 }
