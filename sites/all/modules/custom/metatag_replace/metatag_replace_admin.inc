@@ -39,7 +39,6 @@ function metatag_replace_type_list() {
  * Defines Main form for the module to Search and Replace.
  */
 function metatag_replace_form($form, &$form_state) {
-  drupal_session_start();
   $intial_search = '';
   $default_replace = '';
   $default_case = '';
@@ -245,7 +244,12 @@ function metatag_replace_search_operation($form, &$form_state, $opn) {
   }
   $results = $query->execute()->fetchAll();
   if(empty($results))
-    drupal_set_message(t("No nodes exists for the Content type."),"status");
+  {
+        $_SESSION['metatag_replace_show_result'] = FALSE;
+        drupal_set_message(t("No nodes exists for the Content type."),"status");
+
+  }
+    
   else {
     
     foreach ($results as $values) {
