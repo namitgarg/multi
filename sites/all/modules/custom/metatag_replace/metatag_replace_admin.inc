@@ -6,7 +6,7 @@
  */
 
 /**
- * Function to check if the field contains Html and Php.
+ * Checks field for Html and Php.
  *
  * @return bool
  *   True if fields contains No Html or Php.
@@ -22,13 +22,13 @@ function metatag_replace_xss_check($data) {
 }
 
 /**
- * Function to get all Content Type details for Content type dropdown.
+ * Gets the list of  Content Type for Content type dropdown.
  */
 function metatag_replace_type_list() {
   $typedata = node_type_get_types();
   foreach ($typedata as $values1) {
     $type_machine_name = $values1->type;
-    $type_human_name = t($values1->name);
+    $type_human_name = t("@typename", array('@typename' => $values1->name));
     $func_content_type[$type_machine_name] = $type_human_name;
   }
 
@@ -135,10 +135,7 @@ function metatag_replace_form($form, &$form_state) {
     '#validate' => array('metatag_replace_form_replace_validate'),
     '#submit' => array('metatag_replace_form_replace_submit'),
   );
-
-  /*
-   * To Display the Result of The operation in the Field.
-   */
+  // To Display the Result of The operation in the Field.
   if (!empty($_SESSION['metatag_replace_show_result']) && $_SESSION['metatag_replace_show_result'] == 'TRUE') {
     if ($_SESSION['metatag_replace_opn'] == 'complete') {
       $dispaly_result = $_SESSION['metatag_replace_result_of_replace'];
@@ -153,7 +150,6 @@ function metatag_replace_form($form, &$form_state) {
       '#theme' => $theme_name,
       '#list' => $dispaly_result,
     );
-
     $_SESSION['metatag_replace_show_result'] = FALSE;
   }
   return $form;
@@ -200,7 +196,7 @@ function metatag_replace_form_replace_submit($form, &$form_state) {
 }
 
 /**
- * This function gets nid of nodes and passes to batch.
+ * Gets nid of nodes and passes to batch.
  *
  * Information about variables used.
  * $_SESSION['metatag_replace_word_search']=>Stores the Search word.
@@ -243,23 +239,18 @@ function metatag_replace_search_operation($form, &$form_state, $opn) {
     $query->condition('type', ($type), 'IN');
   }
   $results = $query->execute()->fetchAll();
-  if(empty($results))
-  {
-        $_SESSION['metatag_replace_show_result'] = FALSE;
-        drupal_set_message(t("No nodes exists for the Content type."),"status");
-
+  if (empty($results)) {
+    $_SESSION['metatag_replace_show_result'] = FALSE;
+    drupal_set_message(t("No nodes exists for the Content type."), "status");
   }
-    
   else {
-    
     foreach ($results as $values) {
       $batch['operations'][] = array('metatag_replace_start_batch_search', array($values->nid));
     }
     batch_set($batch);
-  // The path to redirect when batch process is completed.
-  batch_process('admin/config/search/metatags/replace');
+    // The path to redirect when batch process is completed.
+    batch_process('admin/config/search/metatags/replace');
   }
-  
 }
 
 /**
@@ -563,7 +554,6 @@ function metatag_replace_batch_fix_finished($success, $results, $operations) {
     )));
   }
 }
-
 /**
  * Submit Handler for Cancel Operation for Replace Operation.
  */

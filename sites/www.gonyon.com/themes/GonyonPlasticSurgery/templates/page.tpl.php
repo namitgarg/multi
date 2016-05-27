@@ -155,7 +155,17 @@
         <?php print render($title_prefix); ?>
         <?php if ($title): ?>
           <h1 class="title" id="page-title"><?php print $title; ?></h1>
-           <?php print $site_h2 ?>
+           <?php
+              $alteternate_h2 = "<h2>" . variable_get('alternate_site_h2_text') . "</h2>";
+              $h2_nid = variable_get('alternate_site_h2_nid');
+              $h2_nid_list = explode(",", $h2_nid);
+              $current_nid = arg(1);
+              if (in_array($current_nid, $h2_nid_list)) {
+                  print($alteternate_h2);
+              } else {
+                  print $site_h2;
+              }
+              ?>
         <?php endif; ?>
         <?php print render($title_suffix); ?>
         <?php print $messages; ?>

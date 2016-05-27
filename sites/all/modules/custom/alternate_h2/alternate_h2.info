@@ -1,0 +1,4 @@
+name = alternate_h2
+description = Sets a site-wide  Alternate &#60h2&#62; tags.
+package = SEO
+core = 7.x
