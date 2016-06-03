@@ -1,5 +1,0 @@
-name = Metatag_bulk_uploader
-description = Upload Metatag in bulf from a csv file
-core = 7.x
-dependencies[] = metatag
-configure = admin/config/search/metatags/bulk_update

@@ -158,9 +158,9 @@ function metatag_replace_form($form, &$form_state) {
  * Form Validation for Search Operation.
  */
 function metatag_replace_form_search_validate($form, &$form_state) {
-  $output = metatag_replace_xss_check($form_state['values']['search_box']);
-  if (!$output) {
-    form_set_error('search_box', t("Do not Enter any HTML or Php tags"));
+  $search_check = metatag_replace_xss_check($form_state['values']['search_box']);
+  if (!$search_check) {
+    form_set_error('search_box', t("Do not enter any HTML or PHP code."));
   }
 }
 /**
@@ -173,9 +173,14 @@ function metatag_replace_form_replace_validate($form, &$form_state) {
   if ($form_state['values']['replace_box'] == $form_state['values']['search_box']) {
     form_set_error('replace_box', t("Search and Replace Texts are Same."));
   }
-  $output = metatag_replace_xss_check($form_state['values']['replace_box']);
-  if ($output == FALSE) {
-    form_set_error('replace_box', t("Please Do not Enter any HTML or Php tags."));
+  
+  $search_check = metatag_replace_xss_check($form_state['values']['search_box']);
+  if ($search_check == FALSE) {
+    form_set_error('search_box', t("Do not enter any HTML or PHP code."));
+  }
+  $replace_check = metatag_replace_xss_check($form_state['values']['replace_box']);
+  if ($replace_check == FALSE) {
+    form_set_error('replace_box', t("Do not enter any HTML or PHP code."));
   }
 }
 
@@ -418,7 +423,7 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
         $values,
         $nid_replace[$keys],
         $replace_list[$keys],
-        ),
+      ),
       );
     }
   }
@@ -429,7 +434,7 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
       $batch1['operations'][] = array('metatag_replace_start_batch_replace_all', array(
         $values,
         $replace_detail[$keys],
-        ),
+      ),
       );
     }
   }
@@ -511,7 +516,7 @@ function metatag_replace_start_batch_replace_all($meta_list, $meta_detail, &$con
 }
 /**
  * Helper function to perform replace on Meta tags.
- * 
+ *
  * $search_result => stores the result of Meta fields.
  */
 function metatag_replace_perform_replace($search_result) {

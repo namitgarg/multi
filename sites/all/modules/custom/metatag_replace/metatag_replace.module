@@ -88,7 +88,7 @@ function metatag_replace_theme() {
 
 /**
  * Theme function for search operation.
- * 
+ *
  * $result['list'] Stores the Following Data
  * $result['list']['search-word']=> Stores the search word.
  * $result['list']['replace-word']=> Stores the replace word.
@@ -131,14 +131,14 @@ function theme_metatag_replace_operation_search($result) {
       'title' => $title,
       'type' => $type,
       'attributes' => $attributes,
-        )
+    )
     );
   }
 }
 
 /**
  * Theme function for replace operation.
- * 
+ *
  * $result['list'] Stores the Following Data
  * $result['list']['opn']=> Stores operation state.
  * $result['list']['field_result']=> Stores the Meta field Selected.
@@ -179,8 +179,7 @@ function theme_metatag_replace_operation_replace($result) {
       'title' => $title,
       'type' => $type,
       'attributes' => $attributes,
-        )
+    )
     );
   }
 }
-    
