@@ -6,9 +6,9 @@ dependencies[] = field
 files[] = entity_example.test
 configure = admin/structure/entity_example_basic/manage
 
-; Information added by Drupal.org packaging script on 2015-11-25
+; Information added by Drupal.org packaging script on 2016-05-22
 version = "7.x-1.x-dev"
 core = "7.x"
 project = "examples"
-datestamp = "1448423960"
+datestamp = "1463958243"
 

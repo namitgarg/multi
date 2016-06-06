@@ -22,6 +22,8 @@ Module supports 4 fields which are provided by Metatag module.
   
 * User can either Url_alias or node/nid got the path cloumn. 
 
+* Display success Messages And Error Message for each row.
+
 * A Sample CSV File can be found inside <sample> folder.
 
 Requirements
