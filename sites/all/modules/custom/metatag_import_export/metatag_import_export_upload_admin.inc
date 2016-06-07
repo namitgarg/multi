@@ -34,7 +34,7 @@ function metatag_import_export_upload_form($form, &$form_state) {
     '#title' => t('Upload File'),
     '#required' => TRUE,
     '#description' => t('Allowed Extensions: csv'),
-    '#upload_location' => 'public://node_creator/',
+    '#upload_location' => 'public://metatag_import_export/',
     '#upload_validators' => array(
       'file_validate_extensions' => array('csv'),
       'file_validate_size' => array(1 * 1024 * 1024),
@@ -78,7 +78,7 @@ function metatag_import_export_form_submit($form, &$form_state) {
       'title' => t("Processing Nodes for Uploading Metatag"),
       'init_message' => t("Starting Metatag Upload Process"),
       'progress_message' => t("Processed @current out of @total Nodes"),
-      'file' => drupal_get_path('module', 'metatag_import_export') . '/metatag_import_export_admin.inc',
+      'file' => drupal_get_path('module', 'metatag_import_export') . '/metatag_import_export_upload_admin.inc',
       'error_message' => t("metatag Bulk Update  has encountered an error."),
     );
     foreach ($path as $keys => $values) {
@@ -92,6 +92,7 @@ function metatag_import_export_form_submit($form, &$form_state) {
         ));
     }
     batch_set($batch);
+    drupal_set_message("helllo");
     // The path to redirect when batch process is completed.
     batch_process('admin/config/search/metatags/import');
   }
@@ -185,29 +186,17 @@ function metatag_import_export_node_processing($cur_nid, $title, $description, $
   $node = node_load($cur_nid);
   if (!empty($title)) {
     $node->metatags[$node->language]['title']['value'] = $title;
-    if (!isset($node->metatags[$node->language]['title']['value'])) {
-      drupal_set_message(t("%path Meta Title field is wrong on %row_num", array('%path' => $path, '%row_num' => $row_num)), 'warning');
-    }
   }
   if (!empty($description)) {
     $node->metatags[$node->language]['description']['value'] = $description;
-    if (!isset($node->metatags[$node->language]['description']['value'])) {
-      drupal_set_message(t("%path Meta description field is wrong on %row_num", array('%path' => $path, '%row_num' => $row_num)), 'warning');
-    }
   }
   if (!empty($abstract)) {
     $node->metatags[$node->language]['abstract']['value'] = $abstract;
-    if (!isset($node->metatags[$node->language]['abstract']['value'])) {
-      drupal_set_message(t("%path Meta abstract field is wrong on %row_num", array('%path' => $path, '%row_num' => $row_num)), 'warning');
-    }
   }
   if (!empty($keywords)) {
     $node->metatags[$node->language]['keywords']['value'] = $keywords;
-    if (!isset($node->metatags[$node->language]['abstract']['value'])) {
-      drupal_set_message(t("%path Meta abstract field is wrong on %row_num", array('%path' => $path, '%row_num' => $row_num)), 'warning');
-    }
   }
   $node->revision = 1;
-  $node->log = "Modified by Metatag Bulk Uploader Module.";
+  $node->log = "Modified by Metatag Import Export Module.";
   node_save($node);
 }

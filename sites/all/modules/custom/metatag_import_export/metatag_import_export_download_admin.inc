@@ -71,7 +71,7 @@ function metatag_import_export_download_nid($type) {
     return ($nid_list);
 }
 
-function metatag_import_export_process_csv($nid_list,$filename = 'ub.csv') {
+function metatag_import_export_process_csv($nid_list,$filename = 'metatag_import_export.csv') {
 drupal_add_http_header('Content-Type', 'text/csv');
 drupal_add_http_header('Content-Disposition', 'attachment;filename='.$filename);
  $path="private://metatag_import_export/";
@@ -94,7 +94,7 @@ if( !$fp ){
   fputcsv($fp,$header);
     foreach ($nid_list as $keys => $values) {
           
-        $node = node_load($values);
+       $node = node_load($values);
        $path="node/" . $values;
         $title = (isset($node->metatags[$node->language]['title']['value']) ? $node->metatags[$node->language]['title']['value'] : "");
         $description = (isset($node->metatags[$node->language]['description']['value']) ? $node->metatags[$node->language]['description']['value'] : "");
