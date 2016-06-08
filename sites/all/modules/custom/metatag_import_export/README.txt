@@ -1,30 +1,31 @@
 *********************************************************
------------------------MetaTag Bulk Uploader-------------------
+-----------------------MetaTag Import Export-------------------
 *********************************************************
 
 Introduction
+
 ------------
-Metatag Bulk Uploader is used to Upload Metatag in bulk to your site.
-It uses batch API to Upload Metatags from a CSV file.
+MetaTag Import Export can be used to import metatags form a CSV file or Export metatags to a CSV file for node pages.
 Module supports 4 fields which are provided by Metatag module.
 
-*This module provides a form where user will upload the CSV file.
 
-*Csv file has 5 fields
-  path -> you can enter node/nid or the URL Alias for the node.
-  title -> this corresponds to Meta tag Title.
-  description -> this corresponds to Meta tag description.
-  abstract -> This corresponds to Meta abstract.
-  keywords -> this correspOnds to Meta Keywords. 
+Description
+-----------
 
-* User can either upload all  field for Meta Tags or specific fields by leaving
-  blank other fields
-  
-* User can either Url_alias or node/nid got the path cloumn. 
+  *This module has two seperate forms for import and export.
+  *Export - you can select the content type and a CSV file will be downloaded to Your System.
+  *Import - Upload the CSV file in the format given in Sample file and metatags will imported with success and error messages.
+  *Csv file has 5 fields
 
-* Display success Messages And Error Message for each row.
+  *  path -> you can enter node/nid or the URL Alias for the node.
+  *  title -> this corresponds to Meta tag Title.
+  *  description -> this corresponds to Meta tag description.
+  *  abstract -> This corresponds to Meta abstract.
+  *  keywords -> this correspOnds to Meta Keywords. 
 
-* A Sample CSV File can be found inside <sample> folder.
+
+  * User can either fill all 4 field for Meta Tags or specific fields by leaving blank other fields
+
 
 Requirements
 ------------
@@ -45,7 +46,7 @@ Installation & Use
 
 Configuration
 -------------
- * Configure user permissions in Administration » People » Permissions:
-   Metatag Bulk Uploader  - Select the roles you want to give permission to 
-                            upload Metatags Using Metatag Bulk Uploader Module.
-
+ 
+Configure user permissions in Administration >> People >> Permissions:
+    * Metatag Import  - Select the roles you want to give permission to import Metatags using the module.
+    * Metatag Export  - Select the roles you want to give permission to export Metatags using the module.>

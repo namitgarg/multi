@@ -2,7 +2,7 @@
 
 /**
  * @file
- * The .
+ * Stores the code for import Process.
  */
 
 /**
@@ -25,7 +25,7 @@ function metatag_import_export_xss_check($title, $description, $abstract, $keywo
 }
 
 /**
- * Implements hook_form().
+ * Form for Export operation.
  */
 function metatag_import_export_upload_form($form, &$form_state) {
   metatag_import_export_getpath();
@@ -42,14 +42,14 @@ function metatag_import_export_upload_form($form, &$form_state) {
   );
   $form['submit'] = array(
     '#type' => 'submit',
-    '#value' => t("Submit"),
+    '#value' => t("Import"),
     '#submit' => array('metatag_import_export_form_submit'),
   );
   return $form;
 }
 
 /**
- * Submmit Handler for Search Operation.
+ * Submmit Handler for Import Operation.
  */
 function metatag_import_export_form_submit($form, &$form_state) {
   $flag = 1;
@@ -75,11 +75,11 @@ function metatag_import_export_form_submit($form, &$form_state) {
     $batch = array(
       'operations' => array(),
       'finished' => 'metatag_import_export_finish_batch',
-      'title' => t("Processing Nodes for Uploading Metatag"),
-      'init_message' => t("Starting Metatag Upload Process"),
+      'title' => t("Processing Nodes for importing Metatags"),
+      'init_message' => t("Starting Metatag Import Process"),
       'progress_message' => t("Processed @current out of @total Nodes"),
       'file' => drupal_get_path('module', 'metatag_import_export') . '/metatag_import_export_upload_admin.inc',
-      'error_message' => t("metatag Bulk Update  has encountered an error."),
+      'error_message' => t("Metatag import process has encountered an error."),
     );
     foreach ($path as $keys => $values) {
       $batch['operations'][] = array('metatag_import_export_start_batch', array(
@@ -92,7 +92,6 @@ function metatag_import_export_form_submit($form, &$form_state) {
         ));
     }
     batch_set($batch);
-    drupal_set_message("helllo");
     // The path to redirect when batch process is completed.
     batch_process('admin/config/search/metatags/import');
   }
@@ -137,11 +136,11 @@ function metatag_import_export_start_batch($path, $title, $description, $abstrac
 }
 
 /**
- * Batch 'finished' callback for Upload Operation.
+ * Batch 'finished' callback for Import Operation.
  */
 function metatag_import_export_finish_batch($success, $results, $operations) {
   if ($success) {
-    drupal_set_message(t("Finished Uploading Metatags"));
+    drupal_set_message(t("Finished Importing Metatags"));
   }
   else {
     $error_operation = reset($operations);
@@ -153,7 +152,7 @@ function metatag_import_export_finish_batch($success, $results, $operations) {
 }
 
 /**
- * Function to get nid of all nodes.
+ * Gets nid of all nodes.
  */
 function metatag_import_export_getnid() {
   $query = db_select('node', 'n')
@@ -166,7 +165,7 @@ function metatag_import_export_getnid() {
 }
 
 /**
- * Function to get URl Alias from database.
+ * Get URl Alias from database.
  */
 function metatag_import_export_getpath() {
   $query2 = db_select('url_alias', 'ua')
@@ -180,7 +179,7 @@ function metatag_import_export_getpath() {
 }
 
 /**
- * Function that changes the Metatag for the Nodes.
+ * Changes the Metatag for the Nodes.
  */
 function metatag_import_export_node_processing($cur_nid, $title, $description, $abstract, $keywords, $keys) {
   $node = node_load($cur_nid);

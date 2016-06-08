@@ -25,12 +25,14 @@ function metatag_import_export_permission() {
 function metatag_import_export_help($path, $arg) {
   switch ($path) {
     case "admin/help#metatag_import_export":
-      $text = t("<h3>Upload Metatags in bulk from a CSV file.</h3> 
-          It Uses Batch API to Read Meta tags from the CSV file and updates the 
-          metatag for the nodes specified for the path wriiten in first column. 
-   Module supports 4 fields which are provided by <a href='https://www.drupal.org/project/metatag'>Metatag module</a> . 
-   A sample CSV files is located inside sample folder. For more Information Please visit the project page
-   <a href='https://www.drupal.org/node/2738695'>https://www.drupal.org/node/2738695</a></p>");
+      $text = t("<h3>Import or Export Metags with the help of a csv file.</h3> 
+     <h4>Metatag Import</h4>
+<p> Import Metatags from a CSV file. For the CSV format a Sample file is included inside sample folder.</p>
+<h4> Metatag Export</p>
+<p> Export Metatags bsed on content type to a CSV file </p>
+<p> Module supports 4 fields which are provided by <a href='https://www.drupal.org/project/metatag'>Metatag module</a> . 
+  For more Information Please visit the project page
+  <a href='https://www.drupal.org/node/2738695'>https://www.drupal.org/node/2738695</a></p>");
       return $text;
   }
 }

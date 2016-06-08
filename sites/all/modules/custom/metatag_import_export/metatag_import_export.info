@@ -3,4 +3,4 @@ description = Import or Export Metatags with the help of a CSV file
 core = 7.x
 dependencies[] = metatag
 dependencies[] = path
-configure = admin/config/search/metatags/export
+configure = admin/config/search/metatags/import
