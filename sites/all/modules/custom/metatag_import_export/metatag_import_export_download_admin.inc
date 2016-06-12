@@ -97,22 +97,18 @@ function metatag_import_export_process_csv($nid_list, $filename = 'metatag_impor
     drupal_set_message(t('Unable open file for writing. Check permissions and try again.'), 'error');
     return;
   }
-  $header = array('Path', 'Title', 'Description', 'Abstract', 'Keywords');
+  $header = array('Node Title','Path', ' Meta Title', 'Meta Description', 'Meta Abstract', ' Meta Keywords');
   fputcsv($fp, $header);
   foreach ($nid_list as $keys => $values) {
     $node = node_load($values);
+    $node_title=$node->title;
     $path = "node/" . $values;
-    $title = (isset($node->metatags[$node->language]['title']['value']) ? $node->metatags[$node->language]['title']['value'] : "");
-    $description = (isset($node->metatags[$node->language]['description']['value']) ? $node->metatags[$node->language]['description']['value'] : "");
-    $abstract = (isset($node->metatags[$node->language]['abstract']['value']) ? $node->metatags[$node->language]['abstract']['value'] : "");
-    $keywords = (isset($node->metatags[$node->language]['keywords']['value']) ? $node->metatags[$node->language]['keywords']['value'] : "");
-    if (!empty($title) || !empty($description) || !empty($abstract) || !empty($keywords)) {
-      $meta_csv['path'][] = "node/" . $values;
-      $meta_csv['title'][] = $title;
-      $meta_csv['description'][] = $description;
-      $meta_csv['abstract'][] = $abstract;
-      $meta_csv['keywords'][] = $node->metatags[$node->language]['keywords']['value'];
-      $row = array($path, $title, $description, $abstract, $keywords);
+    $meta_title = (isset($node->metatags[$node->language]['title']['value']) ? $node->metatags[$node->language]['title']['value'] : "");
+    $meta_description = (isset($node->metatags[$node->language]['description']['value']) ? $node->metatags[$node->language]['description']['value'] : "");
+    $meta_abstract = (isset($node->metatags[$node->language]['abstract']['value']) ? $node->metatags[$node->language]['abstract']['value'] : "");
+    $meta_keywords = (isset($node->metatags[$node->language]['keywords']['value']) ? $node->metatags[$node->language]['keywords']['value'] : "");
+    if (!empty($meta_title) || !empty($meta_description) || !empty($meta_abstract) || !empty($meta_keywords)) {  
+      $row = array($node_title,$path, $meta_title, $meta_description, $meta_abstract, $meta_keywords);
       fputcsv($fp, $row);
     }
   }
