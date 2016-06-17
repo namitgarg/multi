@@ -97,10 +97,12 @@ function metatag_import_export_csv_process_csv($nid_list, $filename = 'metatag_i
     drupal_set_message(t('Unable open file for writing. Check permissions and try again.'), 'error');
     return;
   }
-  $header = array('Node Title','Path', ' Meta Title', 'Meta Description', 'Meta Abstract', ' Meta Keywords');
+  $header = array('Path','Node Title', ' Meta Title', 'Meta Description', 'Meta Abstract', ' Meta Keywords');
   fputcsv($fp, $header);
   foreach ($nid_list as $keys => $values) {
     $node = node_load($values);
+     $row = array('Paaath','Nodae Titale', ' Meta Tiatle', 'Meta aDescription', 'Meta aAbstract', ' Meta Keywords');
+      fputcsv($fp, $row);
     $node_title=$node->title;
     $path = "node/" . $values;
     $meta_title = (isset($node->metatags[$node->language]['title']['value']) ? $node->metatags[$node->language]['title']['value'] : "");
@@ -108,7 +110,9 @@ function metatag_import_export_csv_process_csv($nid_list, $filename = 'metatag_i
     $meta_abstract = (isset($node->metatags[$node->language]['abstract']['value']) ? $node->metatags[$node->language]['abstract']['value'] : "");
     $meta_keywords = (isset($node->metatags[$node->language]['keywords']['value']) ? $node->metatags[$node->language]['keywords']['value'] : "");
     if (!empty($meta_title) || !empty($meta_description) || !empty($meta_abstract) || !empty($meta_keywords)) {  
-      $row = array($node_title,$path, $meta_title, $meta_description, $meta_abstract, $meta_keywords);
+      //$row = array($path, $node_title, $meta_title, $meta_description, $meta_abstract, $meta_keywords);
+          $row = array('Path','Node Title', ' Meta Title', 'Meta Description', 'Meta Abstract', ' Meta Keywords');
+
       fputcsv($fp, $row);
     }
   }
