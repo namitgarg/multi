@@ -46,7 +46,7 @@ function metatag_import_export_csv_menu() {
     'description' => 'Import Metatag from a csv file',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('metatag_import_export_csv_upload_form'),
-    'access arguments' => array('metatag_import'),
+    'access arguments' => array('metatag_import_csv'),
     'file' => 'metatag_import_export_csv_upload_admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
@@ -55,7 +55,7 @@ function metatag_import_export_csv_menu() {
     'description' => 'Export Metatag to a csv file',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('metatag_import_export_csv_download_form'),
-    'access arguments' => array('metatag_export'),
+    'access arguments' => array('metatag_export_csv'),
     'file' => 'metatag_import_export_csv_download_admin.inc',
     'type' => MENU_LOCAL_TASK,
   );

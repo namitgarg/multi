@@ -11,6 +11,7 @@
  * @return bool
  *   True if fields contains No Html or Php.
  */
+define("BLANK","_blank");
 function metatag_import_export_csv_xss_check($path, $meta_title, $meta_description, $meta_abstract, $meta_keywords) {
     $checked_path = strip_tags($path);
     $checked_meta_title = strip_tags($meta_title);
@@ -53,13 +54,17 @@ function metatag_import_export_csv_upload_form($form, &$form_state) {
  * Submmit Handler for Import Operation.
  */
 function metatag_import_export_csv_form_submit($form, &$form_state) {
-    $count=0;
     $file = file_load($form_state['values']['upload_file']);
     $file->status = FILE_STATUS_PERMANENT;
     file_save($file);
     $fileurl = file_create_url($file->uri);
-    $handle = fopen($fileurl, "r");
-    fgetcsv($handle);
+    metatag_import_export_csv_read_file($fileurl);
+
+}
+function metatag_import_export_csv_read_file($fileurl) {
+    
+        $count=0;
+  $handle = fopen($fileurl, "r");
     $batch = array(
       'operations' => array(),
       'finished' => 'metatag_import_export_csv_finish_batch_upload',
@@ -72,24 +77,23 @@ function metatag_import_export_csv_form_submit($form, &$form_state) {
     while (!feof($handle)) {
         $count++;
         $data = fgetcsv($handle);
-        $title[] = $data[0];
-        $path[] = $data[1];
-        $meta_title[] = $data[2];
-        $meta_description[] = $data[3];
-        $meta_abstract[] = $data[4];
-        $meta_keywords[] = $data[5];
         $batch['operations'][] = array('metatag_import_export_csv_start_batch_upload', array(
-            $data[0],
+            $data[1],
             $data[2],
             $data[3],
             $data[4],
             $data[5],
             $count,
         ));
+
+
     }
     batch_set($batch);
-    // The path to redirect when batch process is completed.
-    batch_process('admin/config/search/metatags/import');
+//    // The path to redirect when batch process is completed.
+ //  batch_process('admin/config/search/metatags/import');
+   drush_backend_batch_process();
+    // drush_backend_batch_process();
+
 }
 /**
  * Gets nid of all nodes.
@@ -150,6 +154,7 @@ function metatag_import_export_csv_start_batch_upload($path, $meta_title, $meta_
             metatag_import_export_csv_node_processing($path_nid[$path_search], $meta_title, $meta_description, $meta_abstract, $meta_keywords, $keys);
             drupal_set_message(t("%path  Metatag on row %row_num updated Successfully", array('%path ' => $path, '%row_num' => $row_num)));
         }
+        
         else {
             drupal_set_message(t("%path  Metatag on row %row_num does not exists", array('%path' => $path, '%row_num' => $row_num)), 'error');
         }
@@ -179,20 +184,46 @@ function metatag_import_export_csv_finish_batch_upload($success, $results, $oper
 function metatag_import_export_csv_node_processing($cur_nid, $meta_title, $meta_description, $meta_abstract, $meta_keywords, $keys) {
     $node = node_load($cur_nid);
     if (!empty($meta_title)) {
-        drupal_set_message("hi".$meta_title."bye");
+        if($meta_title==BLANK)
+        {
+        $node->metatags[$node->language]['title']['value'] = "";
+      }
+    else{
         $node->metatags[$node->language]['title']['value'] = $meta_title;
-    }
-    if (!null($meta_title)) {
-        drupal_set_message("okkk".$meta_title."bye");
+     }
     }
     if (!empty($meta_description)) {
-        $node->metatags[$node->language]['description']['value'] = $meta_description;
+        if($meta_description==BLANK)
+        {
+            $node->metatags[$node->language]['description']['value'] = "";
+          }
+        else
+        {
+            $node->metatags[$node->language]['description']['value'] = $meta_description;
+        }
+        
     }
     if (!empty($meta_abstract)) {
-        $node->metatags[$node->language]['abstract']['value'] = $meta_abstract;
+        if($meta_abstract==BLANK)
+        {
+            $node->metatags[$node->language]['abstract']['value'] = "";
+        }
+        else
+        {
+            $node->metatags[$node->language]['abstract']['value'] = $meta_abstract;
+        }
+        
     }
     if (!empty($meta_keywords)) {
-        $node->metatags[$node->language]['keywords']['value'] = $meta_keywords;
+        if($meta_abstract==BLANK)
+        {
+            $node->metatags[$node->language]['keywords']['value'] = "";
+        }
+        else
+        {
+            $node->metatags[$node->language]['keywords']['value'] = $meta_keywords;
+        }
+        
     }
     $node->revision = 1;
     $node->log = "Modified by Metatag Import Export Module.";
