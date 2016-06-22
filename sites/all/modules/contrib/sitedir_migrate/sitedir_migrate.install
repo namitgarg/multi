@@ -1,6 +1,0 @@
-<?php
-
-function sitedir_migrate_uninstall() {
-  variable_del('sitedir_migrate_from');
-  variable_del('sitedir_migrate_to');
-}

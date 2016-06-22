@@ -18,7 +18,7 @@ function metatag_import_export_csv_xss_check($path, $meta_title, $meta_descripti
     $checked_meta_description = strip_tags($meta_description);
     $checked_meta_abstract = strip_tags($meta_abstract);
     $checked_meta_keywords = strip_tags($meta_keywords);
-    if (($checked_node_title == $node_title) && ($checked_path == $path) && ($checked_meta_title == $meta_title) && ($checked_meta_description == $meta_description) && ($checked_meta_abstract == $meta_abstract) && ($checked_meta_keywords == $meta_keywords)) {
+    if (($checked_path == $path) && ($checked_meta_title == $meta_title) && ($checked_meta_description == $meta_description) && ($checked_meta_abstract == $meta_abstract) && ($checked_meta_keywords == $meta_keywords)) {
         return TRUE;
     }
     else {
@@ -65,6 +65,7 @@ function metatag_import_export_csv_read_file($fileurl) {
     
         $count=0;
   $handle = fopen($fileurl, "r");
+  $header_row = fgetcsv($handle);
     $batch = array(
       'operations' => array(),
       'finished' => 'metatag_import_export_csv_finish_batch_upload',
@@ -85,15 +86,17 @@ function metatag_import_export_csv_read_file($fileurl) {
             $data[5],
             $count,
         ));
-
-
     }
     batch_set($batch);
-//    // The path to redirect when batch process is completed.
- //  batch_process('admin/config/search/metatags/import');
-   drush_backend_batch_process();
-    // drush_backend_batch_process();
-
+  if(drupal_is_cli())
+  {
+    $batch =& batch_get();
+    $batch['progressive'] = FALSE;
+    drush_backend_batch_process();
+  }
+  else{
+       batch_process('admin/config/search/metatags/import');
+  }
 }
 /**
  * Gets nid of all nodes.
