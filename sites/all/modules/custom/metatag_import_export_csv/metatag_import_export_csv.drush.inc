@@ -15,21 +15,25 @@ function metatag_import_export_csv_drush_help($command) {
     }
 }
 
-function metatag_import_export_csv_type()
+function metatag_import_export_csv_type_drush()
 {
-    $nam=array("namit"=>"NAMIT","garg"=>"GARG");
-               // module_load_include('inc', 'metatag_import_export_csv', 'metatag_import_export_csv_download_admin');
-                include_once 'metatag_import_export_csv_download_admin.inc';
-               $result= metatag_import_export_csv_type_list();
-               print_r($result);
+define('DRUPAL_ROOT', getcwd());
+require_once DRUPAL_ROOT . '/includes/bootstrap.inc';
+drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
-    return $nam;
+ $typedata = node_type_get_types();
+  foreach ($typedata as $values1) {
+    $type_machine_name[$values1->type] = $values1->type;
+  }
+    $default_type = array('all' => 'all');
+  $content_type = array_merge($default_type, $type_machine_name);
+  return $content_type;
 }
 /**
  * Implements hook_drush_command().
  */
 function metatag_import_export_csv_drush_command() { 
-    $items['metatag-upload'] = array(
+    $items['metatag-import'] = array(
       'description' => dt("Import metatags form a csv"),
       'arguments' => array(
         'filepath' => dt("The filepath to your file"),
@@ -38,7 +42,7 @@ function metatag_import_export_csv_drush_command() {
         'windows_example' => 'drush metatag-import D:\\drupal\\multi.csv',
       ),
     );
-    $items['metatag-download'] = array(
+    $items['metatag-export'] = array(
       'description' => dt("Export  metatags to a csv file"),
       'arguments' => array(
         'type' => dt("The type of option"),
@@ -46,17 +50,38 @@ function metatag_import_export_csv_drush_command() {
       'examples' => array(
         'windows_example' => 'drush metatag-import D:\\drupal\\multi.csv',
       ),
-      'options' =>metatag_import_export_csv_type(),
+      'arguments' => array(
+       'filepath' => 'The type of statement (error or success).',
+      ),
+      'options' =>metatag_import_export_csv_type_drush(),
     );
     return $items;
 }
 
-function drush_metatag_import_export_csv_metatag_download($type)
+function drush_metatag_import_export_csv_metatag_export($type,$filepath)
 {
-    print("import drupal metatags $type");
     
+    //print("namit garg $filepath");
+    if(empty($type))
+    {
+        $type = drush_choice(metatag_import_export_csv_type_drush(), 'Select the content type you want to export metatags');
+    }
+    if(!(in_array($type,metatag_import_export_csv_type_drush())))
+    {
+drush_set_error(dt('@type is not a machine name of any Content type',array('@type' => $type)));
+    }
+    else{
+      include_once 'metatag_import_export_csv_download_admin.inc';
+        metatag_import_export_csv_download_nid($type,$filepath);
+
+    }
+//$value = drush_prompt(dt('Give the path for the file to be created'));
+//drush_print(dt('Path is  @value!', array('@value' =>  $value)));
 }
-function drush_metatag_import_export_csv_metatag_upload($filepath) {
+
+
+function drush_metatag_import_export_csv_metatag_import
+($filepath) {
     if (file_exists($filepath)) {
 
         $file_info = pathinfo($filepath);

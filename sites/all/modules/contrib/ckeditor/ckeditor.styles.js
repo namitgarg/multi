@@ -29,6 +29,8 @@ if(typeof(CKEDITOR) !== 'undefined') {
 
             { name : 'Blue Title'		, element : 'h3', styles : { 'color' : 'Blue' } },
             { name : 'Red Title'		, element : 'h3', styles : { 'color' : 'Red' } },
+            { name : 'Green test'		, element : 'h3', styles : { 'color' : 'Lime' } },
+            
 
             /* Inline Styles */
 

@@ -218,7 +218,7 @@ function metatag_import_export_csv_node_processing($cur_nid, $meta_title, $meta_
         
     }
     if (!empty($meta_keywords)) {
-        if($meta_abstract==BLANK)
+        if($meta_keywords==BLANK)
         {
             $node->metatags[$node->language]['keywords']['value'] = "";
         }

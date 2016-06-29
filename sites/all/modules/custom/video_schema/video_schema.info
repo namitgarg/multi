@@ -1,3 +1,0 @@
-name = Video schema
-description = Create schema for videos by custom video field type.
-core = 7.x

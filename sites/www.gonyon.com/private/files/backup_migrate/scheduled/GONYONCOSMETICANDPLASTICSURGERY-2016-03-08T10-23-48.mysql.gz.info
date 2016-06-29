@@ -1,8 +1,0 @@
-filename = "GONYONCOSMETICANDPLASTICSURGERY-2016-03-08T10-23-48"
-description = ""
-datestamp = "1457457873"
-generator = "Backup and Migrate (http://drupal.org/project/backup_migrate)"
-generatorversion = "7.x-2.x"
-sites[0][version] = "7.37"
-sites[0][name] = "GONYON COSMETIC AND PLASTIC SURGERY"
-sites[0][url] = "http://localhost/multi/"
