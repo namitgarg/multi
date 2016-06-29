@@ -119,6 +119,7 @@ function metatag_import_export_csv_process_csv($nid_list,$file_path) {
   file_save($file);
   if(drupal_is_cli())
   {
+       file_unmanaged_copy($file_url,'D://nam/abc//');
      return($file);
   }
   file_transfer($file->uri, array(

@@ -1,5 +1,5 @@
 *********************************************************
------------------------MetaTag Import Export-------------------
+-----------------------MetaTag Import Export-------------
 *********************************************************
 
 Introduction
@@ -12,19 +12,20 @@ Module supports 4 fields which are provided by Metatag module.
 Description
 -----------
 
-  *This module has two seperate forms for import and export.
-  *Export - you can select the content type and a CSV file will be downloaded to Your System.
-  *Import - Upload the CSV file in the format given in Sample file and metatags will imported with success and error messages.
-  *Csv file has 5 fields
+* This module has two seperate forms for import and export.
+	* Export - you can select the content type and a CSV file will be downloaded to Your System.
+	
+	* Import - Upload the CSV file in the format given in Sample file and metatags will imported with success and error messages.
 
-  *  path -> you can enter node/nid or the URL Alias for the node.
-  *  title -> this corresponds to Meta tag Title.
-  *  description -> this corresponds to Meta tag description.
-  *  abstract -> This corresponds to Meta abstract.
-  *  keywords -> this correspOnds to Meta Keywords. 
-
-
-  * User can either fill all 4 field for Meta Tags or specific fields by leaving blank other fields
+	* Csv file has 6 fields
+		 * Node Title - The node title of the node(optional leave the column empty if you dont have title).
+		 * path - The node/nid or the URL Alias for the node.
+		 * title - The meta title from the Meta tag module.
+		 * description - The meta description from the Meta tag module.
+		 * abstract - The Meta Abstract from the Meta tag module.
+		 * keywords - The Meta keywords from the Meta tag module.
+	
+   * Type "_blank" if you want to set a value of any field empty.
 
 
 Requirements
@@ -46,7 +47,17 @@ Installation & Use
 
 Configuration
 -------------
- 
-Configure user permissions in Administration >> People >> Permissions:
-    * Metatag Import  - Select the roles you want to give permission to import Metatags using the module.
-    * Metatag Export  - Select the roles you want to give permission to export Metatags using the module.>
+
+* Configure user permissions in Administration >> People >> Permissions:
+  * Metatag Import - Select the roles you want to give permission to import Metatags using the module.
+  * Metatag Export - Select the roles you want to give permission to export Metatags using the module.
+
+* Form Page
+ * Metatag-import - The form for metatag import can be accessed by going to /admin/config/search/metatags/import
+ * Metatag-export - The form for metatag import can be accessed by going to /admin/config/search/metatags/export
+
+Drush
+------
+The module has support for drush command
+ * Metatag Export - drush metatag-export where you want file(a copy of file is created on the directory private:://metatag_import_export_csv)
+ * Metatag Import - drush metatag-import < path to your CSV file>
