@@ -85,9 +85,20 @@ function metatag_import_export_csv_process_csv($nid_list,$file_path) {
     drupal_set_message(t('Unable to create directory in file system. Check permissions and try again.'), 'error');
     return;
   }
-  $file = file_save_data('', $file_url,FILE_EXISTS_REPLACE);
+   $check_path=drupal_realpath($file_url);
+   if(empty($check_path))
+   {
+       print("hiiiiii");
+       return;
+   }
+else
+{
+    print("byeeee");
+}
+   $file = file_save_data('', $file_url,FILE_EXISTS_REPLACE);
 
-  if (!$file) {
+
+  if (!($file)) {
     drupal_set_message(t('Unable to write to file system. Check permissions and try again.'), 'error');
     return;
   }
@@ -119,7 +130,7 @@ function metatag_import_export_csv_process_csv($nid_list,$file_path) {
   file_save($file);
   if(drupal_is_cli())
   {
-       file_unmanaged_copy($file_url,'D://nam/abc//');
+       //file_unmanaged_copy($file_url,'D://nam/abc//');
      return($file);
   }
   file_transfer($file->uri, array(

@@ -173,7 +173,6 @@ function metatag_replace_form_replace_validate($form, &$form_state) {
   if ($form_state['values']['replace_box'] == $form_state['values']['search_box']) {
     form_set_error('replace_box', t("Search and Replace Texts are Same."));
   }
-  
   $search_check = metatag_replace_xss_check($form_state['values']['search_box']);
   if ($search_check == FALSE) {
     form_set_error('search_box', t("Do not enter any HTML or PHP code."));
@@ -216,8 +215,8 @@ function metatag_replace_search_operation($form, &$form_state, $opn) {
   $_SESSION['metatag_replace_word_search'] = $form_state['values']['search_box'];
   $_SESSION['metatag_replace_word_replace'] = $form_state['values']['replace_box'];
   $_SESSION['metatag_replace_field_result'] = $form_state['values']['field_select'];
-  $_SESSION['metatag_replace_case'] = ($form_state['values']['case'] == "insensitive" ? "i" : "");
-  $_SESSION['metatag_replace_match'] = ($form_state['values']['exact_match'] == "insensitive" ? "i" : "");
+  $_SESSION['metatag_replace_case'] = ($form_state['values']['case']);
+  $_SESSION['metatag_replace_match'] = ($form_state['values']['exact_match']);
   $_SESSION['metatag_replace_show_result'] = "TRUE";
   $_SESSION['metatag_replace_opn'] = $opn;
   $type = $form_state['values']['content_type'];
@@ -276,7 +275,10 @@ function metatag_replace_start_batch_search($values, &$context) {
   $context['results']['opn'] = $_SESSION['metatag_replace_opn'];
   $node = node_load($nid_list);
   $meta_field = $_SESSION['metatag_replace_field_result'];
-  $search_string = "/" . $_SESSION['metatag_replace_case'] . $searchword . $_SESSION['metatag_replace_case'] . "/" . $_SESSION['metatag_replace_case'];
+  $search_case = $_SESSION['metatag_replace_case'] == "insensitive" ? "i" : "";
+  $search_match = $_SESSION['metatag_replace_match'] == "1" ? "\b" : "";
+  $search_string = "/" . $search_match . $searchword . $search_match . "/" . $search_case;
+  $_SESSION['metatag_replace_search_string'] =  $search_string;
   $node_title = $node->title;
   $meta_nid = $values;
   // To check all nodes that have Meta tags and store them.
@@ -454,7 +456,8 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
 function metatag_replace_start_batch_replace_single($node_link, $nid, $meta_list, &$context) {
   $searchword = $_SESSION['metatag_replace_word_search'];
   $replaceword = $_SESSION['metatag_replace_word_replace'];
-  $search_string = "/" . $_SESSION['metatag_replace_case'] . $searchword . $_SESSION['metatag_replace_case'] . "/" . $_SESSION['metatag_replace_case'];
+  //$search_string = "/" . $_SESSION['metatag_replace_case'] . $searchword . $_SESSION['metatag_replace_case'] . "/" . $_SESSION['metatag_replace_case'];
+  $search_string = $_SESSION['metatag_replace_search_string'];
   $replace_result = preg_replace($search_string, $replaceword, $meta_list);
   $context['results']['replace'][] = $replace_result;
   $context['results']['detail']['nid'][] = $nid;
@@ -522,7 +525,7 @@ function metatag_replace_start_batch_replace_all($meta_list, $meta_detail, &$con
 function metatag_replace_perform_replace($search_result) {
   $searchword = $_SESSION['metatag_replace_word_search'];
   $replaceword = $_SESSION['metatag_replace_word_replace'];
-  $search_string = "/" . $_SESSION['metatag_replace_case'] . $searchword . $_SESSION['metatag_replace_case'] . "/" . $_SESSION['metatag_replace_case'];
+  $search_string = $_SESSION['metatag_replace_search_string'];
   $search_tag = explode(": ", $search_result, "2");
   $match_tag = $search_tag[1];
   return preg_replace($search_string, $replaceword, $match_tag);
