@@ -278,7 +278,7 @@ function metatag_replace_start_batch_search($values, &$context) {
   $search_case = $_SESSION['metatag_replace_case'] == "insensitive" ? "i" : "";
   $search_match = $_SESSION['metatag_replace_match'] == "1" ? "\b" : "";
   $search_string = "/" . $search_match . $searchword . $search_match . "/" . $search_case;
-  $_SESSION['metatag_replace_search_string'] =  $search_string;
+  $_SESSION['metatag_replace_search_string'] = $search_string;
   $node_title = $node->title;
   $meta_nid = $values;
   // To check all nodes that have Meta tags and store them.
@@ -456,7 +456,6 @@ function metatag_replace_confirm_form_submit($form, &$form_state) {
 function metatag_replace_start_batch_replace_single($node_link, $nid, $meta_list, &$context) {
   $searchword = $_SESSION['metatag_replace_word_search'];
   $replaceword = $_SESSION['metatag_replace_word_replace'];
-  //$search_string = "/" . $_SESSION['metatag_replace_case'] . $searchword . $_SESSION['metatag_replace_case'] . "/" . $_SESSION['metatag_replace_case'];
   $search_string = $_SESSION['metatag_replace_search_string'];
   $replace_result = preg_replace($search_string, $replaceword, $meta_list);
   $context['results']['replace'][] = $replace_result;
