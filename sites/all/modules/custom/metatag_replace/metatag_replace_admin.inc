@@ -154,6 +154,7 @@ function metatag_replace_form($form, &$form_state) {
   }
   return $form;
 }
+
 /**
  * Form Validation for Search Operation.
  */
@@ -163,6 +164,7 @@ function metatag_replace_form_search_validate($form, &$form_state) {
     form_set_error('search_box', t("Do not enter any HTML or PHP code."));
   }
 }
+
 /**
  * Form Validation for Replace operation.
  */
@@ -516,6 +518,7 @@ function metatag_replace_start_batch_replace_all($meta_list, $meta_detail, &$con
   $node->log = "Modified by Meta tag replace module Replaced $searchword with $replaceword";
   node_save($node);
 }
+
 /**
  * Helper function to perform replace on Meta tags.
  *
@@ -561,6 +564,7 @@ function metatag_replace_batch_fix_finished($success, $results, $operations) {
     )));
   }
 }
+
 /**
  * Submit Handler for Cancel Operation for Replace Operation.
  */

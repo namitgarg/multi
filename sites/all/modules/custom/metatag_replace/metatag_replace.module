@@ -19,6 +19,7 @@ function metatag_replace_permission() {
     ),
   );
 }
+
 /**
  * Implements hook_help().
  */
