@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Main file for the Metatag Import Export module.
@@ -19,6 +20,7 @@ function metatag_import_export_csv_permission() {
     ),
   );
 }
+
 /**
  * Implements hook_help().
  */

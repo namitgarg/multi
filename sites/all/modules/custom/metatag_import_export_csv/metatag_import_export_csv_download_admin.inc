@@ -15,7 +15,7 @@ function metatag_import_export_csv_type_list() {
     $type_human_name = t("@typename", array('@typename' => $values1->name));
     $func_content_type[$type_machine_name] = $type_human_name;
   }
-    $default_type = array('all' => 'All');
+  $default_type = array('all' => 'All');
   $content_type = array_merge($default_type, $func_content_type);
   return $content_type;
 }
@@ -43,20 +43,19 @@ function metatag_import_export_csv_download_form($form, &$form_state) {
 }
 
 /**
- * Submit Handler for Export.
+ * Submit Handler for Export Operation.
  */
 function metatag_import_export_csv_download_submit($form, &$form_state) {
   $type = $form_state['values']['content_type'];
-  $file_path="private://metatag_import_export_csv/";
-  metatag_import_export_csv_download_nid($type,$file_path);
+  metatag_import_export_csv_download_nid($type);
 }
 
 /**
- * Gets the list of nid according to content type.
+ * Gets the list of nid's according to content type.
  */
-function metatag_import_export_csv_download_nid($type,$file_path) {
+function metatag_import_export_csv_download_nid($type) {
   $query = db_select('node', 'n')
-        ->fields('n', array('nid'));
+      ->fields('n', array('nid'));
   if ($type != 'all') {
     $query->condition('type', $type);
   }
@@ -69,35 +68,24 @@ function metatag_import_export_csv_download_nid($type,$file_path) {
   foreach ($results as $values) {
     $nid_list[] = $values->nid;
   }
-    metatag_import_export_csv_process_csv($nid_list,$file_path);
+  metatag_import_export_csv_process_csv($nid_list, $type);
 }
 
 /**
- * Creates CSV file and downloads it to system.
+ * Creates CSV file and downloads it to the System.
  */
-function metatag_import_export_csv_process_csv($nid_list,$file_path) {
-    $filename = 'metatag_import_export_csv.csv';
-    $file_url = $file_path . $filename;
+function metatag_import_export_csv_process_csv($nid_list, $type) {
+  $file_path = "private://metatag_import_export_csv/";
+  $filename = "metatag_import_export_csv_" . $type . ".csv";
+  $file_url = $file_path . $filename;
   drupal_add_http_header('Content-Type', 'text/csv');
   drupal_add_http_header('Content-Disposition', 'attachment;filename=' . $filename);
-  
+
   if (!file_prepare_directory($file_path, FILE_CREATE_DIRECTORY)) {
     drupal_set_message(t('Unable to create directory in file system. Check permissions and try again.'), 'error');
     return;
   }
-   $check_path=drupal_realpath($file_url);
-   if(empty($check_path))
-   {
-       print("hiiiiii");
-       return;
-   }
-else
-{
-    print("byeeee");
-}
-   $file = file_save_data('', $file_url,FILE_EXISTS_REPLACE);
-
-
+  $file = file_save_data('', $file_url, FILE_EXISTS_REPLACE);
   if (!($file)) {
     drupal_set_message(t('Unable to write to file system. Check permissions and try again.'), 'error');
     return;
@@ -107,34 +95,46 @@ else
     drupal_set_message(t('Unable open file for writing. Check permissions and try again.'), 'error');
     return;
   }
-  $header = array('Node Title','Path', ' Meta Title', 'Meta Description', 'Meta Abstract', ' Meta Keywords');
-        fputcsv($fp, $header);
+  $header = array(
+    'Node Title',
+    'Path',
+    ' Meta Title',
+    'Meta Description',
+    'Meta Abstract',
+    ' Meta Keywords',
+  );
+  fputcsv($fp, $header);
 
   foreach ($nid_list as $keys => $values) {
     $node = node_load($values);
-    $node_title=$node->title;
+    $node_title = $node->title;
     $path = "node/" . $values;
     $meta_title = (isset($node->metatags[$node->language]['title']['value']) ? $node->metatags[$node->language]['title']['value'] : "");
     $meta_description = (isset($node->metatags[$node->language]['description']['value']) ? $node->metatags[$node->language]['description']['value'] : "");
     $meta_abstract = (isset($node->metatags[$node->language]['abstract']['value']) ? $node->metatags[$node->language]['abstract']['value'] : "");
     $meta_keywords = (isset($node->metatags[$node->language]['keywords']['value']) ? $node->metatags[$node->language]['keywords']['value'] : "");
-    if (!empty($meta_title) || !empty($meta_description) || !empty($meta_abstract) || !empty($meta_keywords)) {  
-      $row = array($node_title,$path, $meta_title, $meta_description, $meta_abstract, $meta_keywords);
-     file_put_contents($file_url,$row,FILE_APPEND);
-       fputcsv($fp, $row);
+    if (!empty($meta_title) || !empty($meta_description) || !empty($meta_abstract) || !empty($meta_keywords)) {
+      $row = array(
+        $node_title,
+        $path,
+        $meta_title,
+        $meta_description,
+        $meta_abstract,
+        $meta_keywords,
+      );
+      file_put_contents($file_url, $row, FILE_APPEND);
+      fputcsv($fp, $row);
     }
   }
 
   fclose($fp);
   $file->filesize = filesize($file->uri);
   file_save($file);
-  if(drupal_is_cli())
-  {
-       //file_unmanaged_copy($file_url,'D://nam/abc//');
-     return($file);
+  if (drupal_is_cli()) {
+    return ($file);
   }
   file_transfer($file->uri, array(
-      'Content-Type' => 'text/csv',
-      'Content-Disposition' => 'attachment; filename="' . $filename . '"',
-      'Content-Length' => filesize($file->uri)));
+    'Content-Type' => 'text/csv',
+    'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+    'Content-Length' => filesize($file->uri)));
 }
