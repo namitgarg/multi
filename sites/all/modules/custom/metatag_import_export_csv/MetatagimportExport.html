@@ -1,8 +1,8 @@
- <h3>MetaTag Import Export</h3>
+ <h3>MetaTag Import Export CSV </h3>
 
 <h4>Introduction</h4>
 
-<p>MetaTag Import Export can be used to import metatags form a CSV file or Export metatags to a CSV file. Module supports 4 fields which are provided by Metatag module.</p>
+<p>MetaTag Import Export CSV can be used to import metatags form a CSV file or Export metatags to a CSV file. Module supports 4 fields which are provided by Metatag module.</p>
 
 <h4>Description</h4>
 
@@ -20,6 +20,7 @@
 		<li>keywords -&gt;  The Meta keywords from the Meta tag module.</li>
 	</ul>
 	</li>
+	<li>Leave a cell empty if you dont want to change the value of that field.</li>
 	<li>Type "_blank" if you want to set a value of any field empty</li>
 </ul>
 
@@ -50,9 +51,9 @@
 <p> Form Page  </p>
 <ul> 
 <li> Metatag-import - The form for metatag import can be accessed by going to  /admin/config/search/metatags/import</li>
-<li> Metatag-export - The form for metatag import can be accessed by going to  /admin/config/search/metatags/export</li>
+<li> Metatag-export - The form for metatag export can be accessed by going to  /admin/config/search/metatags/export</li>
 </ul>
 <h4>Drush</h4>
 The module has support for drush  command
-<li> Metatag Export - drush metatag-export <type> <path> where you want file(a copy of file is created on the directory private:://metatag_import_export_csv)
+<li> Metatag Export - drush metatag-export <type> (A file is created on the directory private:://metatag_import_export_csv).
 <li>Metatag Import - drush metatag-import < path to your CSV file>

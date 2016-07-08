@@ -1,0 +1,23 @@
+<?php
+function node_creator_permission() {
+  return array(
+    'p1_import_export' => array(
+      'title' => t('p1_import_export'),
+      'description' => t('Allows to create node'),
+    ),
+  );
+}
+function p1_import_export() {
+
+  $items['admin/config/system/p1import'] = array(
+    'title callback' => 'P1 import Export',
+    'title' => 'P1 import Export',
+    'description' => 'P1 import Export',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('node_creator_form'),
+    'access arguments' => array('p1_import_export'),
+    'file' => 'p1_import_export.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+  return $items;
+}
