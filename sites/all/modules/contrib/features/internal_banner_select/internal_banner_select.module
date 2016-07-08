@@ -1,7 +1,0 @@
-<?php
-/**
- * @file
- * Code for the Internal Banner select feature.
- */
-
-include_once 'internal_banner_select.features.inc';
