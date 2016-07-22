@@ -25,7 +25,9 @@ function comment_search_replace_form($form, &$form_state) {
     $any_role=array('any' => t('Any Content'));
     $role_options = array_merge($role_options,$any_role);
   }
-  $field_list=field_info_instances('comment','comment_node_page');
+  $type_machine_name='page';
+  $field_list=field_info_instances('comment','comment_node_'.$type_machine_name);
+
   foreach($field_list as $values)
   {
     if ($values['widget']['type']== 'text_default'||'text_textarea')
@@ -33,6 +35,9 @@ function comment_search_replace_form($form, &$form_state) {
   $field_list[$values['field_name']]= $values['label'];
     }
   }
+    $title_field =array('title' => 'Title');
+   $field_list = array_merge($title_field, $field_list);
+
   $session_match = FALSE;
   $form['search_box'] = array(
     '#type' => 'textfield',
@@ -131,32 +136,67 @@ function comment_search_replace_form_replace_submit($form, &$form_state) {
 
 function comment_search_replace_operation($form, &$form_state, $opn)
 {
-  $_SESSION['comment_search_replace_word_search'] = $form_state['values']['search_box'];
-  $_SESSION['comment_search_replace_word_replace'] = $form_state['values']['replace_box'];
-  $_SESSION['comment_search_replace_case'] = ($form_state['values']['case']);
-  $_SESSION['comment_search_replace_match'] = ($form_state['values']['exact_match']);
+  $replace_word = $_SESSION['comment_search_replace_word_search'] =  $form_state['values']['search_box'];
+  $replace_word = $_SESSION['comment_search_replace_word_replace'] =  $form_state['values']['replace_box'];
+  $type = $_SESSION['comment_search_replace_type'] = $form_state['values']['content_type'];
+  $field = $_SESSION['comment_search_replace_field'] = $form_state['values']['field_select']; 
+  $case = $_SESSION['comment_search_replace_case'] = $form_state['values']['case'];
+  $match = $_SESSION['comment_search_replace_match'] = $form_state['values']['exact_match'];
+  $role = $_SESSION['comment_search_replace_role'] =  $form_state['values']['role'];
   $_SESSION['comment_search_replace_show_result'] = "TRUE";
   $_SESSION['comment_search_replace_opn'] = $opn;
-  $type = $form_state['values']['content_type'];
-  $_SESSION['comment_search_replace_type'] = $type;
-  
-   $subquery = db_select('comment','c')
-//     $subquery->join('field_data_comment_body', 'cb', 'c.cid = cb.entity_id');
-//     $subquery->fields('c', array('cid','nid', 'subject'))
-//              ->fields('cb', array('entity_id','comment_body_value'));
-      
-             ->fields('c', array('cid'));
-              
-    $results = $subquery->execute()->fetchAll();
+ // Define The batch For Search Operation.
+  $batch = array(
+    'operations' => array(),
+    'finished' => 'comment_search_replace_finish_batch_search',
+    'title' => t("Processing  All Node For Searching"),
+    'init_message' => t("Starting Metatag Search Operation"),
+    'progress_message' => t("Processed @current out of @total Nodes"),
+    'file' => drupal_get_path('module', 'metatag_replace') . '/metatag_replace_admin.inc',
+    'error_message' => t("MetaTag Module has encountered an error."),
+  );  
+   $query = db_select('comment','c');
+   $query->join('node', 'n', 'c.nid = n.nid');
+ $query->fields('c', array('cid'));
+if($role == 'own')
+  {
+  global $user;
+      $query->condition('c.uid', $user->uid);
+  }
+      $query->condition('n.type', $type);
+
+    $results = $query->execute()->fetchAll();
 print("<pre>");
 foreach ($results as $values)
 {
   $comment_cid_list[]=$values->cid;
+       // $batch['operations'][] = array('comment_search_replace_start_batch_search', array($values->nid));
+
   $com=comment_load($values->cid);
-  print_r($com);
-  print("< /br>");
 }
     
 print_r($comment_cid_list);
 die;  
+}
+function comment_search_replace_start_batch_search($values, &$context)
+{
+  
+}
+function comment_search_replace_finish_batch_search($success, $results, $operations)
+{
+  if ($success) {
+    drupal_set_message("hiiii");
+    print_r($results);
+    
+  }
+    else {
+
+    $error_operation = reset($operations);
+    drupal_set_message(t("An error occurred while processing @operation with arguments : @args", array(
+      '@operation' => $error_operation[0],
+      '@args' => print_r($error_operation[0], TRUE),
+    )));
+  }
+  
+  
 }

@@ -50,10 +50,8 @@ function comment_search_replace_menu() {
     'description' => 'Comment Search Replace',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('comment_search_replace_form'),
-   'access arguments' => array(1),
+    'access arguments' => array(1),
     'access callback'=>'comment_search_replace_role',
-      
-
     'file' => 'comment_search_replace_admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
