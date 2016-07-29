@@ -1,5 +1,13 @@
 <?php
+/**
+ * 
+ */
 
+
+/**
+ * 
+ * @return type
+ */
 function comment_search_replace_type_list() {
   $typedata = node_type_get_types();
   foreach ($typedata as $values1) {
@@ -10,6 +18,12 @@ function comment_search_replace_type_list() {
   return $func_content_type;
 }
 
+/**
+ * 
+ * @param type $form
+ * @param type $form_state
+ * @return type
+ */
 function comment_search_replace_form($form, &$form_state) {
 
   $content_type = comment_search_replace_type_list();
@@ -25,19 +39,6 @@ function comment_search_replace_form($form, &$form_state) {
     $any_role=array('any' => t('Any Content'));
     $role_options = array_merge($role_options,$any_role);
   }
-  $type_machine_name='page';
-  $field_list=field_info_instances('comment','comment_node_'.$type_machine_name);
-
-  foreach($field_list as $values)
-  {
-    if ($values['widget']['type']== 'text_default'||'text_textarea')
-    {
-  $field_list[$values['field_name']]= $values['label'];
-    }
-  }
-    $title_field =array('title' => 'Title');
-   $field_list = array_merge($title_field, $field_list);
-
   $session_match = FALSE;
   $form['search_box'] = array(
     '#type' => 'textfield',
@@ -52,6 +53,7 @@ function comment_search_replace_form($form, &$form_state) {
     //'#default_value' => $default_replace,
     '#description' => t("Enter the text to be replaced with"),
   );
+  $selected = isset($form_state['values']['content_type']) ? $form_state['values']['content_type'] : key($content_type);
   $form['content_type'] = array(
     '#type' => 'select',
     '#options' => $content_type,
@@ -60,13 +62,21 @@ function comment_search_replace_form($form, &$form_state) {
     '#required' => TRUE,
     //'#default_value' => $default_type,
     '#description' => t("Select the Content type"),
+        '#ajax' => array(
+      'callback' => 'comment_search_replace_field_callback',
+      'wrapper' => 'field-wrap',
+    ),
   );
+    
    $form['field_select'] = array(
     '#type' => 'select',
-    '#options' => $field_list,
+    //'#options' => $field_list,
+     '#options' => comment_search_replace_dependent_field($selected),
     '#title' => t("Field"),
     '#validated' => TRUE,
     '#required' => TRUE,
+    '#prefix' => '<div id="field-wrap">',
+    '#suffix' => '</div>',
     //'#default_value' => $default_field,
     '#description' => t("Choose meta fields to be Searched"),
   );
@@ -91,10 +101,8 @@ function comment_search_replace_form($form, &$form_state) {
       '#type' => 'radios',
       '#options' => $role_options,
       '#title' => t("Search content For"),
-     '#default_value' => 'own',
-
+      '#default_value' => 'own',
       '#description' => t("Search options."),
-
   );
   $form['search'] = array(
     '#type' => 'submit',
@@ -150,14 +158,15 @@ function comment_search_replace_operation($form, &$form_state, $opn)
     'operations' => array(),
     'finished' => 'comment_search_replace_finish_batch_search',
     'title' => t("Processing  All Node For Searching"),
-    'init_message' => t("Starting Metatag Search Operation"),
+    'init_message' => t("Starting Comment Search Operation"),
     'progress_message' => t("Processed @current out of @total Nodes"),
-    'file' => drupal_get_path('module', 'metatag_replace') . '/metatag_replace_admin.inc',
-    'error_message' => t("MetaTag Module has encountered an error."),
+    'file' => drupal_get_path('module', 'comment_search_replace') . '/comment_search_replace_admin.inc',
+    'error_message' => t("Comment Search Raplce Module has encountered an error."),
   );  
-   $query = db_select('comment','c');
-   $query->join('node', 'n', 'c.nid = n.nid');
- $query->fields('c', array('cid'));
+  
+  $query = db_select('comment','c');
+  $query->join('node', 'n', 'c.nid = n.nid');
+  $query->fields('c', array('cid'));
 if($role == 'own')
   {
   global $user;
@@ -176,6 +185,7 @@ foreach ($results as $values)
 }
     
 print_r($comment_cid_list);
+print_r($com);
 die;  
 }
 function comment_search_replace_start_batch_search($values, &$context)
@@ -199,4 +209,26 @@ function comment_search_replace_finish_batch_search($success, $results, $operati
   }
   
   
+}
+function comment_search_replace_field_callback($form, $form_state)
+{
+    return $form['field_select'];
+
+}
+function comment_search_replace_dependent_field($content_type)
+{
+  $field_list = field_info_instances('comment', 'comment_node_' . $content_type);
+  foreach ($field_list as $values) {
+    if ($values['widget']['type'] == 'text_default' || 'text_textarea') {
+      $field_list[$values['field_name']] = $values['label'];
+    }
+  }
+  if(!empty($field_list))
+  {
+  $title_field = array('title' => 'Title');
+  $field_list = array_merge($title_field, $field_list);
+  $all_option=array('all'=>'All');
+  $field_options=array_merge($field_list,$all_option);
+  }
+    return $field_options;
 }

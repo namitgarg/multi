@@ -1,3 +1,4 @@
 name = Comment Search Replace
 description = Search and Replace Comments for Node Pages.
 core = 7.x
+configure = admin/content/comment/search

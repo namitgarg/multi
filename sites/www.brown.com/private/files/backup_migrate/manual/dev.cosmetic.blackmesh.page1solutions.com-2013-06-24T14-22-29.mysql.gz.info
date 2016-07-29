@@ -1,8 +1,0 @@
-filename = "dev.cosmetic.blackmesh.page1solutions.com-2013-06-24T14-22-29"
-description = ""
-datestamp = "1372105349"
-generator = "Backup and Migrate (http://drupal.org/project/backup_migrate)"
-generatorversion = "7.x-2.x"
-sites[0][version] = "7.22"
-sites[0][name] = "dev.cosmetic.blackmesh.page1solutions.com"
-sites[0][url] = "http://dev.cosmetic.blackmesh.page1solutions.com/"

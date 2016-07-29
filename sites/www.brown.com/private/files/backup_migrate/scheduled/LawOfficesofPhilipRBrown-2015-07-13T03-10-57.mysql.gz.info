@@ -1,8 +1,0 @@
-filename = "LawOfficesofPhilipRBrown-2015-07-13T03-10-57"
-description = ""
-datestamp = "1436778698"
-generator = "Backup and Migrate (http://drupal.org/project/backup_migrate)"
-generatorversion = "7.x-2.x"
-sites[0][version] = "7.37"
-sites[0][name] = "Law Offices of Philip R Brown"
-sites[0][url] = "http://dev.brownphilip.blackmesh.page1solutions.com/"
