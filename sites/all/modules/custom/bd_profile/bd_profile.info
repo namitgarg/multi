@@ -1,0 +1,4 @@
+name = BD Profile
+description = BD Profiles module REST Api
+package = custom
+core = 7.x

@@ -1,0 +1,79 @@
+<?php
+
+/*
+ * Implementing hook_services_resources() to register my cutom resource to the services
+ */
+
+function bd_profile_services_resources() {
+  return array(
+    'bd_profile' => array(                            // My new resource
+      'create' => array(
+        'callback' => '_bd_profile_create_node',
+        'access callback' => '_bd_profile_create_access',
+        'args' => array(
+          array(
+            'name' => 'node',
+            'optional' => FALSE,
+            'source' => 'data',                         // Setting the source to 'data' in your args means that any data in the POST will be passed to the callback function
+            'description' => 'The node data to create',
+            'type' => 'array',
+          ),
+        ),
+      ),
+      
+    ),
+  );
+}
+
+
+/**
+ * Access callback
+ */
+function _bd_profile_create_access() {
+    return TRUE;
+}
+
+
+
+/**
+ * Callback function that creates the node
+ */
+
+function _bd_profile_create_node($arg) {
+  global $base_url;
+  $url = $arg['file_url'];
+  $directory = file_build_uri('public://');
+  if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY)) {
+    // If our directory doesn't exist and can't be created, use the default.
+    $directory = NULL;
+  }
+  $file = system_retrieve_file($url, $directory, TRUE);
+  
+  if($arg) {
+    // Create the node
+    $node = new stdClass();
+    $node->type = 'page';
+    $node->title = $arg['title'];
+    $node->body['und'][0]['value'] = $arg['body']['und'][0]['value'];
+    $node->field_phone_no['und'][0]['value'] = $arg['field_contact']['und'][0]['value'];
+    $node->field_upload_image['und'][0] = (array) $file;    
+    $node->language = $arg['language'];
+
+    $node->uid = $arg['uid'];
+    node_object_prepare($node);
+    // Save the node
+    $node = node_submit($node);
+    
+    $field_collection_item = entity_create('field_collection_item', array('field_name' => 'field_my_addresses'));
+    $field_collection_item->setHostEntity('node', $node);
+    $field_collection_item->field_line_one['und'][0]['value'] = $arg['field_line']['und'][0]['value'];
+    $field_collection_item->save();
+
+    node_save($node);
+    
+      } else {
+    // Error if no args were passed
+    return services_error(t('No data submitted!'), 406, t('No data submitted!'));
+  }
+}
+

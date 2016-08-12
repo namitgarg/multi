@@ -1,0 +1,5 @@
+name = Node Insert Alter
+description = This is the alteration for the node for a ctype
+package = custom
+core = 7.x
+modules[] = nodesavealter.module

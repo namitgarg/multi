@@ -1,0 +1,145 @@
+<?php
+
+  
+function nodesavealternid() {
+  global $merg_data;
+  $node = db_select('node', 'n')
+      ->fields('n', array('nid', 'type'))
+      ->condition('n.type', 'test_ctypes', '=')
+//      ->condition('n.type', 'test_ctypes', '=')
+      ->execute()
+      ->fetchAll();
+    $getfield_node = node_load($node[0]->nid);
+    
+    foreach($getfield_node->field_add_data['und'] as $k => $v){
+      
+      $fc = field_collection_item_load($getfield_node->field_add_data['und'][$k]['value']);
+//      $fst = $fc->field_s_one['und'][0]['value'];
+//      $scnd = $fc->field_s_two['und'][0]['value'];
+//      $data = array($fst, $scnd);
+      $merg_data = $getfield_node->field_add_data['und']; //$getfield_node->field_add_data['und'][$k]['value']; // http_build_query($data);
+    }
+    return $merg_data; 
+
+}
+
+
+// nodesavealternid();
+
+/*
+ * implementing hook_node_insert
+ */
+
+function nodesavealter_node_insert($node) {
+  
+
+  
+  $get_fielddata = nodesavealternid();
+  
+  
+  
+  foreach($get_fielddata as $k => $v){
+    $fc = field_collection_item_load($get_fielddata[$k]['value']);
+    $site_one = $fc->field_s_one['und'][0]['value'];
+    $site_two = $fc->field_s_two['und'][0]['value'];
+    $field_types = $fc->field_choose_field_type['und'][0]['value'];
+    $fieldtypes[] = $field_types;
+    $sitesone_field[] = $site_one;
+    $sitestwo_field[$site_two] = $site_two; // ."=>".$field_types;
+     // print "\$node->".$fst ."=". "\$args[".$scnd."]<p>&nbsp;</p>" ;
+  }
+  
+  if($node->type == 'page'){
+  $request_url = 'http://192.168.0.169/drupal-fresh-two/profile/user/login';
+  // User data
+  $user_data = array(
+    'username' => 'drupal-fresh-two',
+    'password' => 'drupal-fresh-two',
+  );
+  $user_data = http_build_query($user_data);
+  // cURL
+  $curl = curl_init($request_url);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json')); // Accept JSON response
+  curl_setopt($curl, CURLOPT_POST, 1); // Do a regular HTTP POST
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $user_data); // Set POST data
+  curl_setopt($curl, CURLOPT_HEADER, FALSE);  // Ask to not return Header
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($curl, CURLOPT_FAILONERROR, TRUE);
+
+  $response = curl_exec($curl);
+  $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  // Check if login was successful
+  if ($http_code == 200) {
+    // Convert json response as array
+    $logged_user = json_decode($response);
+  }
+  else {
+    // Get error msg
+    $http_message = curl_error($curl);
+    die($http_message);
+  }
+
+/*
+ * Server REST - node.create
+ */
+
+// REST Server URL
+  $array = json_decode(json_encode($node), true);
+  foreach($sitesone_field as $val){
+    if (array_key_exists($val,$array))
+    {
+      $selected_data[$val] = $array[$val];
+    }
+  }
+  
+  // $sitetwofields =  implode("@@", $sitestwo_field);
+//  $arr = array_merge($sitestwo_field, $selected_data);
+//  print json_encode($arr); // .$selected_data);
+//  die;
+  $fields_stwo = http_build_query($sitestwo_field);
+  $maped_fields = http_build_query($selected_data);
+  $fid = $node->field_upload_image['und'][0]['fid'];
+  $file = file_load($fid);
+  $file_url = file_create_url($file->uri);
+  // $file_path = str_replace($base_url .'/', '', $file_url);
+
+  $request_url = 'http://192.168.0.169/drupal-fresh-two/profile/bd_profile';
+  $load_field_collection[] = '';
+  if(isset($node->field_my_address['und'][0]['value']) && !empty($node->field_my_address['und'][0]['value'])){
+    $load_field_collection = field_collection_item_load($node->field_my_address['und'][0]['value']);
+  }
+//  $node_data = http_build_query($load_field_collection);
+//  $node_data1 = http_build_query($node->title);  
+  $final_data = $maped_fields.'&site_two = '.$fields_stwo; // $node_data.$node_data1.'&file_url='.$file_url."&add_field".$get_fielddata;
+  print_r($final_data);
+  die;
+  dpm($final_data);
+  
+  
+  // Define cookie session
+  $cookie_session = $logged_user->session_name . '=' . $logged_user->sessid;
+  // cURL
+  $curl = curl_init($request_url);
+  curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json')); // Accept JSON response
+  curl_setopt($curl, CURLOPT_POST, 1); // Do a regular HTTP POST
+  curl_setopt($curl, CURLOPT_POSTFIELDS, $final_data); // Set POST data
+  curl_setopt($curl, CURLOPT_HEADER, FALSE);  // Ask to not return Header
+  curl_setopt($curl, CURLOPT_COOKIE, "$cookie_session"); // use the previously saved session
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+  curl_setopt($curl, CURLOPT_FAILONERROR, TRUE);
+
+  $response = curl_exec($curl);
+  
+  $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+  // Check if login was successful
+  if ($http_code == 200) {
+    // Convert json response as array
+    $node = json_decode($response);
+  }
+  else {
+    // Get error msg
+    $http_message = curl_error($curl);
+    die($http_message);
+  }
+ }
+}
