@@ -7,73 +7,59 @@
 /*
  * Gets list of all content type
  */
-
 function node_creator_type_list() {
   $typedata = node_type_get_types();
-  foreach ($typedata as $values) {
-    $type_machine_name = $values->type;
-    $type_human_name = $values->name;
+  foreach ($typedata as $values1) {
+    $type_machine_name = $values1->type;
+    $type_human_name = t("@typename", array('@typename' => $values1->name));
     $func_content_type[$type_machine_name] = $type_human_name;
   }
   return $func_content_type;
 }
 
-/**
- * Gets list of fields in a content type
- */
-function node_creator_fields_name($type) {
-  drupal_set_message($type);
-  $field_list = field_info_instances('node', $type);
-  $field_details = array();
-  foreach ($field_list as $values) {
-    if(isset($values['label'])){
-      $field_details[$values['field_name']] = $values['label'];
-    $field_type[] = $values['widget']['type'];
-    }
-    
-  }
-  return $field_details;
-}
+
 
 /*
  * Main Form declaration 
  */
 
 function node_creator_form($form, &$form_state) {
-  $content_type = node_creator_type_list();
-  $field_info = node_creator_fields_name("article");
-    $selected = isset($form_state['values']['content_type']) ? $form_state['values']['content_type'] :array('body'=>'Body');
-
-  $form['title'] = array(
-    '#type' => 'textfield',
-    '#required' => TRUE,
-    '#title' => t('Title'),
-    '#description' => t('Enter the text to be searched for'),
+   $content_type = node_creator_type_list();
+  $case_list = array(
+    "sensitive" => t("Sensitive"),
+    "insensitive" => t("Insensitive"),
   );
+
+  
+  $selected = isset($form_state['values']['content_type']) ? $form_state['values']['content_type'] : key($content_type);
   $form['content_type'] = array(
     '#type' => 'select',
     '#options' => $content_type,
-    '#title' => t('Content type'),
+    '#title' => t("Content type"),
     '#validated' => TRUE,
     '#required' => TRUE,
-    '#description' => t('Select the content type'),
-    '#ajax' => array(
-      'callback' => 'node_creator_fields_dropdown_callback',
-      'wrapper' => 'dropdown-second-replace',
+    //'#default_value' => $default_type,
+    '#description' => t("Select the Content type"),
+        '#ajax' => array(
+      'callback' => 'node_creator_field_callback',
+      'wrapper' => 'field-wrap',
     ),
   );
-
-  $form['field_name'] = array(
+    
+   $form['field_select'] = array(
     '#type' => 'select',
-    '#title' => t('Field Name'),
-    '#prefix' => '<div id="dropdown-second-replace">',
-    '#suffix' => '</div>',
+    //'#options' => $field_list,
+     '#options' => node_creator_dependent_field($selected),
+     '#multiple' => true,
+    '#title' => t("Field"),
     '#validated' => TRUE,
     '#required' => TRUE,
-    '#options' => node_creator_fields_name($form_state['values']['content_type']),
-    '#default' => array('body'=>'Body'),
-    '#description' => t('Select the Field Name'),
+    '#prefix' => '<div id="field-wrap">',
+    '#suffix' => '</div>',
+    //'#default_value' => $default_field,
+    '#description' => t("Choose meta fields to be Searched"),
   );
+   
   $form['upload_file'] = array(
     '#type' => 'managed_file',
     '#title' => t('Upload File'),
@@ -136,4 +122,28 @@ function node_creator_fetchdata($url) {
   }
   die;
   drupal_set_message("gethtml");
+}
+
+function node_creator_field_callback($form, $form_state)
+{
+    return $form['field_select'];
+
+}
+
+function node_creator_dependent_field($content_type)
+{
+  $field_list = field_info_instances('node',$content_type);
+  foreach ($field_list as $values) {
+    if ($values['widget']['type'] == 'text_default' || 'text_textarea') {
+      $field_list[$values['field_name']] = $values['label'];
+    }
+  }
+  if(!empty($field_list))
+  {
+  $title_field = array('title' => 'Title');
+  $field_list = array_merge($title_field, $field_list);
+  $all_option=array('all'=>'All');
+  $field_options=array_merge($field_list,$all_option);
+  }
+    return $field_options;
 }
