@@ -1,0 +1,8 @@
+/sites/*/files/*
+sites/*/files/*
+/sites/*/files/
+/sites/*/files/
+/sites/*/settings.php
+sites/*/settings.php
+/sites/nbproject/private/
+/nbproject/private/

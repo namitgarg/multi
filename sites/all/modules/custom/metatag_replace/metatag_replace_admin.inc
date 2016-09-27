@@ -152,6 +152,7 @@ function metatag_replace_form($form, &$form_state) {
     );
     $_SESSION['metatag_replace_show_result'] = FALSE;
   }
+   print("namit");print_r($_SESSION);
   return $form;
 }
 
